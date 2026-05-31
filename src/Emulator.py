@@ -1,134 +1,126 @@
-import DataCell as DataCell
+from datacell import DataCell
 
 class HackEmulator():
-    __memoryLocations = 32768 #The number of addressable memory locations
-    __codeSize = 4096
+    __memory_locations = 32768 #The number of addressable memory locations
+    __code_size = 4096 #Size of the code section
     
     def __init__(self):
-        self.__Dregister = 0
-        self.__Aregister = 0
-        self.__PCregister = 0
+        self.__D_register = 0
+        self.__A_register = 0
+        self.__PC_register = 0
         self.__datacells = []
-        for i in range(self.__memoryLocations):
-            self.__datacells.append(DataCell.DataCell())
+        for i in range(self.__memory_locations):
+            self.__datacells.append(DataCell())
 
-    def setValue(self, cell, value):
+    def set_value(self, cell, value):
         if type(cell) != int:
-            raise TypeError("setValue requires type int")
-        if cell < 0 or cell >= self.__memoryLocations:
-            raise ValueError("setValue index out of range")
-        self.__datacells[cell].setInt(value)
+            raise TypeError("set_value requires type int")
+        if cell < 0 or cell >= self.__memory_locations:
+            raise ValueError("set_value index out of range")
+        self.__datacells[cell].set_int(value)
 
-    def getValue(self, cell):
+    def get_value(self, cell):
         if type(cell) != int:
-            raise TypeError("getValue requires type int")
-        if cell < 0 or cell >= self.__memoryLocations:
-            raise ValueError("getValue index out of range")
-        return self.__datacells[cell].getInt()
+            raise TypeError("get_value requires type int")
+        if cell < 0 or cell >= self.__memory_locations:
+            raise ValueError("get_value index out of range")
+        return self.__datacells[cell].get_int()
     
-    def __getMValue(self):
-        return self.getValue(self.__Aregister)
+    def __get_M_value(self):
+        return self.get_value(self.__A_register)
 
-    def __setMValue(self, value):
-        self.setValue(self.__Aregister, value)
+    def __set_M_value(self, value):
+        self.set_value(self.__A_register, value)
 
-    def runProgram(self):
-        while(self.__PCregister < self.__codeSize):
-            
-            #print(f"\nCommand: {self.__datacells[self.__PCregister].getBin()}")
-            self.__executeCommand(self.__datacells[self.__PCregister])
-            #print(f"PC: {self.__PCregister}")
-            #print(f"A: {self.__Aregister}")
-            #print(f"D: {self.__Dregister}")
+    def run_program(self):
+        while(self.__PC_register < self.__code_size):
+            self.__execute_command(self.__datacells[self.__PC_register])
 
     def __jump(self):
-        self.__PCregister = self.__Aregister
+        self.__PC_register = self.__A_register
 
-    def __executeCommand(self, dataCell):
+    def __execute_command(self, datacell):
 
-        if dataCell.getBit(15) == 0:
+        if datacell.get_bit(15) == 0:
             #A Command
-            self.__Aregister = dataCell.getInt()
-            self.__PCregister += 1
+            self.__A_register = datacell.get_int()
+            self.__PC_register += 1
             return
 
         #Using C Command: 111a cccc dddc cjjj
 
-        if dataCell.getBit(12) == 0:
-            firstOperand = self.__Aregister
+        if datacell.get_bit(12) == 0:
+            first_operand = self.__A_register
         else:
-            firstOperand = self.__getMValue()
+            first_operand = self.__get_M_value()
         
-        secondOperand = self.__Dregister
-        if dataCell.getBit(11) == 1:
-            secondOperand = 0
+        second_operand = self.__D_register
+        if datacell.get_bit(11) == 1:
+            second_operand = 0
 
-        if dataCell.getBit(10) == 1:
-            secondOperand = ~secondOperand
+        if datacell.get_bit(10) == 1:
+            second_operand = ~second_operand
 
-        if dataCell.getBit(9) == 1:
-            firstOperand = 0
+        if datacell.get_bit(9) == 1:
+            first_operand = 0
 
-        if dataCell.getBit(8) == 1:
-            firstOperand = ~firstOperand
+        if datacell.get_bit(8) == 1:
+            first_operand = ~first_operand
 
-        if dataCell.getBit(7) == 0:
-            result = firstOperand & secondOperand
+        if datacell.get_bit(7) == 0:
+            result = first_operand & second_operand
         else:
-            result = firstOperand + secondOperand
+            result = first_operand + second_operand
 
-        if dataCell.getBit(6) == 1:
+        if datacell.get_bit(6) == 1:
             result = ~result
 
-        if dataCell.getBit(3) == 1:
-            self.__setMValue(result)
+        if datacell.get_bit(3) == 1:
+            self.__set_M_value(result)
 
-        if dataCell.getBit(4) == 1:
-            self.__Dregister = result
+        if datacell.get_bit(4) == 1:
+            self.__D_register = result
 
-        if dataCell.getBit(5) == 1:
-            self.__Aregister = result
+        if datacell.get_bit(5) == 1:
+            self.__A_register = result
 
-        jumpCondition = 4*dataCell.getBit(2) + 2*dataCell.getBit(1) + dataCell.getBit(0)
+        jump_condition = 4*datacell.get_bit(2) + 2*datacell.get_bit(1) + datacell.get_bit(0)
 
-        if jumpCondition == 1 and result > 0:
+        if jump_condition == 1 and result > 0:
             self.__jump()
-        elif jumpCondition == 2 and result == 0:
+        elif jump_condition == 2 and result == 0:
             self.__jump()
-        elif jumpCondition == 3 and result >= 0:
+        elif jump_condition == 3 and result >= 0:
             self.__jump()
-        elif jumpCondition == 4 and result < 0:
+        elif jump_condition == 4 and result < 0:
             self.__jump()
-        elif jumpCondition == 5 and result != 0:
+        elif jump_condition == 5 and result != 0:
             self.__jump()
-        elif jumpCondition == 6 and result <= 0:
+        elif jump_condition == 6 and result <= 0:
             self.__jump()
-        elif jumpCondition == 7:
+        elif jump_condition == 7:
             self.__jump()
         else:
-            self.__PCregister += 1
+            self.__PC_register += 1
 
-    def loadProgram(self, textfile):
+    def load_program(self, textfile):
         lines = textfile.readlines()
 
         for i in range(len(lines)):
-            self.setValue(i, int(lines[i],2))
-            #print(f"Loaded {bin(int(lines[i],2))}")
-            #print(f"Stored as {self.getValue(i)}")
-
+            self.set_value(i, int(lines[i],2))
 
 if __name__ == "__main__":
 
     testEmulator = HackEmulator()
 
-    testcode = open("./test/testcode.txt","r")
-    testEmulator.loadProgram(testcode)
+    testcode = open("./tests/testcode.txt","r")
+    testEmulator.load_program(testcode)
     testcode.close()
     print("Finished Loading")
 
-    testEmulator.runProgram()
+    testEmulator.run_program()
     print("Finished Running")
 
     for i in range(4095, 4162):
-        print(f"RAM[{i}]: {testEmulator.getValue(i)}")
+        print(f"RAM[{i}]: {testEmulator.get_value(i)}")
 

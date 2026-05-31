@@ -5,14 +5,14 @@ class DataCell():
     def __init__(self):
         self.__value = np.short(0)
 
-    def getSize(self):
+    def get_size(self):
         return self.__size
 
-    def getBit(self, index):
+    def get_bit(self, index):
         if type(index) != int:
-            raise TypeError("getBit requires type int")
+            raise TypeError("get_bit requires type int")
         if index < 0 or index >= self.__size:
-            raise IndexError("getBit index out of range")
+            raise IndexError("get_bit index out of range")
         if index == self.__size-1:
             mask = np.short(-2**index)
         else:
@@ -22,17 +22,17 @@ class DataCell():
             return 0
         return 1
 
-    def getInt(self):
+    def get_int(self):
         return int(self.__value)
     
-    def getBin(self):
+    def get_bin(self):
         temp = int(self.__value) % 2**self.__size
 
         return bin(temp)
 
-    def setInt(self, value):
+    def set_int(self, value):
         if type(value) != int:
-            raise TypeError("setInt requires type int")
+            raise TypeError("set_int requires type int")
         
         value = ((value + 2**(self.__size-1)) % 2**self.__size) - 2**(self.__size-1)
         self.__value = np.short(value)
