@@ -7,6 +7,8 @@ class HackEmulator():
     def __init__(self):
         self.__D_register = DataCell()
         self.__A_register = DataCell()
+        self.__P_register = DataCell()
+        self.__P_register.set_int(16383)
         self.__PC_register = DataCell()
         self.__datacells = []
         for i in range(self.__memory_locations):
@@ -32,58 +34,90 @@ class HackEmulator():
     def __set_M_value(self, value):
         self.set_value(self.__A_register.get_int(), value)
 
+    def __get_S_value(self):
+        self.__P_register.set_int(self.__P_register.get_int() + 1)
+        return self.get_value(self.__P_register.get_int())
+
+    def __set_S_value(self, value):
+        self.set_value(self.__P_register.get_int(), value)
+        self.__P_register.set_int(self.__P_register.get_int() - 1)
+
     def run_program(self):
         while(self.__PC_register.get_int() < self.__code_size):
             self.__execute_command(self.__datacells[self.__PC_register.get_int()])
 
-    def __jump(self):
-        self.__PC_register.set_int(self.__A_register.get_int())
-
     def __execute_command(self, datacell):
-
         if datacell.get_bit(15) == 0:
-            #A Command
-            self.__A_register.set_int(datacell.get_int())
-            self.__PC_register.set_int(self.__PC_register.get_int() + 1)
-            return
-
-        #Using C Command: 111a cccc ccdd djjj
-
-        if datacell.get_bit(12) == 0:
-            first_operand = self.__A_register.get_int()
+            self.__A_command(datacell)
         else:
-            first_operand = self.__get_M_value()
-        
+            self.__C_command(datacell)
+
+    def __A_command(self, datacell):
+        self.__A_register.set_int(datacell.get_int())
+        self.__PC_register.set_int(self.__PC_register.get_int() + 1)
+
+    def __C_command(self, datacell):
+        #Using C Command: 10cc cccc aadd djjj
+        operand = self.__get_operand(datacell)
+        result = self.__compute_result(datacell, operand)
+        self.__store_result(datacell, result)
+        self.__compute_jump(datacell, result)
+
+    def __get_operand(self, datacell):
+        a1 = datacell.get_bit(6)
+        a2 = datacell.get_bit(7)
+
+        if a2 == 0 and a1 == 0:
+            return self.__A_register.get_int()
+        elif a2 == 0 and a1 == 1:
+            return self.__get_M_value()
+        elif a2 == 1 and a1 == 0:
+            return self.__P_register.get_int()
+        elif a2 == 1 and a1 == 1:
+            return self.__get_S_value()
+        else:
+            raise ValueError("Datacell bit error")
+
+    def __compute_result(self, datacell, operand):
+        first_operand = operand
         second_operand = self.__D_register.get_int()
-        if datacell.get_bit(11) == 1:
+        if datacell.get_bit(13) == 1:
             second_operand = 0
 
-        if datacell.get_bit(10) == 1:
+        if datacell.get_bit(12) == 1:
             second_operand = ~second_operand
 
-        if datacell.get_bit(9) == 1:
+        if datacell.get_bit(11) == 1:
             first_operand = 0
 
-        if datacell.get_bit(8) == 1:
+        if datacell.get_bit(10) == 1:
             first_operand = ~first_operand
 
-        if datacell.get_bit(7) == 0:
+        if datacell.get_bit(9) == 0:
             result = first_operand & second_operand
         else:
             result = first_operand + second_operand
 
-        if datacell.get_bit(6) == 1:
+        if datacell.get_bit(8) == 1:
             result = ~result
+        return result
 
-        if datacell.get_bit(3) == 1:
-            self.__set_M_value(result)
+    def __store_result(self, datacell, result):
 
-        if datacell.get_bit(4) == 1:
+        store_condition = 4*datacell.get_bit(5) + 2*datacell.get_bit(4) + datacell.get_bit(3)
+
+        if store_condition == 1:
             self.__D_register.set_int(result)
-
-        if datacell.get_bit(5) == 1:
+        elif store_condition == 2:
             self.__A_register.set_int(result)
+        elif store_condition == 3:
+            self.__set_M_value(result)
+        elif store_condition == 4:
+            self.__P_register.set_int(result)
+        elif store_condition == 5:
+            self.__set_S_value(result)
 
+    def __compute_jump(self, datacell, result):
         jump_condition = 4*datacell.get_bit(2) + 2*datacell.get_bit(1) + datacell.get_bit(0)
 
         if jump_condition == 1 and result > 0:
@@ -102,6 +136,10 @@ class HackEmulator():
             self.__jump()
         else:
             self.__PC_register.set_int(self.__PC_register.get_int() + 1)
+    
+    def __jump(self):
+        self.__PC_register.set_int(self.__A_register.get_int())
+
 
     def load_program(self, textfile):
         lines = textfile.readlines()
