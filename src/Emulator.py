@@ -1,14 +1,15 @@
 from datacell import DataCell
 
 class HackEmulator():
-    __memory_locations = 32768 #The number of addressable memory locations
+    __memory_locations = 24577 #The number of addressable memory locations
     __code_size = 4096 #Size of the code section
+    __stack_base = 16383
     
     def __init__(self):
         self.__D_register = DataCell()
         self.__A_register = DataCell()
         self.__P_register = DataCell()
-        self.__P_register.set_int(16383)
+        self.__P_register.set_int(self.__stack_base)
         self.__PC_register = DataCell()
         self.__datacells = []
         for i in range(self.__memory_locations):
@@ -35,16 +36,19 @@ class HackEmulator():
         self.set_value(self.__A_register.get_int(), value)
 
     def __get_S_value(self):
-        self.__P_register.set_int(self.__P_register.get_int() + 1)
         return self.get_value(self.__P_register.get_int())
 
     def __set_S_value(self, value):
         self.set_value(self.__P_register.get_int(), value)
-        self.__P_register.set_int(self.__P_register.get_int() - 1)
 
     def run_program(self):
         while(self.__PC_register.get_int() < self.__code_size):
+            #print(f"\nCommand: {self.__datacells[self.__PC_register.get_int()].get_bin()}")
             self.__execute_command(self.__datacells[self.__PC_register.get_int()])
+            #print(f"PC: {self.__PC_register.get_int()}, D: {self.__D_register.get_int()}, A: {self.__A_register.get_int()}, P: {self.__P_register.get_int()}")
+            #for i in range(4096, 4101):
+            #    print(f"RAM[{i}]: {testEmulator.get_value(i)}")
+            
 
     def __execute_command(self, datacell):
         if datacell.get_bit(15) == 0:
@@ -74,6 +78,7 @@ class HackEmulator():
         elif a2 == 1 and a1 == 0:
             return self.__P_register.get_int()
         elif a2 == 1 and a1 == 1:
+            self.__P_register.set_int(self.__P_register.get_int() + 1)
             return self.__get_S_value()
         else:
             raise ValueError("Datacell bit error")
@@ -116,6 +121,9 @@ class HackEmulator():
             self.__P_register.set_int(result)
         elif store_condition == 5:
             self.__set_S_value(result)
+            self.__P_register.set_int(self.__P_register.get_int() - 1)
+            if self.__P_register.get_int() > self.__stack_base:
+                raise MemoryError("Stack has underflown")
 
     def __compute_jump(self, datacell, result):
         jump_condition = 4*datacell.get_bit(2) + 2*datacell.get_bit(1) + datacell.get_bit(0)
@@ -158,7 +166,5 @@ if __name__ == "__main__":
 
     testEmulator.run_program()
     print("Finished Running")
-
-    for i in range(4095, 4162):
-        print(f"RAM[{i}]: {testEmulator.get_value(i)}")
+    print(f"RAM[4097]: {testEmulator.get_value(4097)}")
 
