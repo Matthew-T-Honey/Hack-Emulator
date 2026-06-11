@@ -28,3 +28,12 @@ ddd Specifies the destination:
 -  111 - Unspecified
 
 jjj Species the Jump condition (as standard Hack)
+
+- 000 - No Jump
+- 001 - Jump if greater than 0
+- 010 - Jump if euqal to 0
+- 011 - Jump if greaer than or equal to 0
+- 100 - Jump if less than 0
+- 101 - Jump if not equal to 0
+- 110 - Jump if less than or equal to 0
+- 111 - Jump
