@@ -1,0 +1,103 @@
+#(){}{()}
+#0010011101001011 - 10059
+#{(}){}()
+#0100111001110010 - 20082
+#({({})})
+#0001000111101110 - 4590
+#{()({})}
+#0100100001111011 - 18555
+
+.data
+test_value: 18555
+bit1
+bit2
+index: 8
+result: 0
+
+.text
+loopstart:
+    load index
+    mov M D
+    load success_con
+    mov D ;jeq
+    load index
+    dec M M
+
+    load test_value
+    mov M D
+    load neg_con1
+    mov D ;jlt
+
+    pos_con1:
+        load bit1
+        mov 0 M
+        load end_con1
+        mov 0 ;jmp
+
+    neg_con1:
+        load bit1
+        mov 1 M
+
+    end_con1:
+        load test_value
+        mov M D
+        add M M
+        mov M D
+
+    load neg_con2
+    mov D ;jlt
+
+    pos_con2:
+        load bit2
+        mov 0 M
+        load end_con2
+        mov 0 ;jmp
+
+    neg_con2:
+        load bit2
+        mov 1 M
+
+    end_con2:
+        load test_value
+        mov M D
+        add M M
+    
+    load bit1
+    mov M D
+    load 0con
+    mov D ;jeq
+
+    1con:
+        load bit2
+        mov M D
+        subl S D
+        load fail_con
+        mov D ;jne
+        load loopstart
+        mov 0;jmp
+
+    0con:
+        load bit2
+        push M
+        load loopstart
+        mov 0;jmp
+
+fail_con:
+    load result
+    mov -1 M
+    load end_loop
+    mov 0;jmp
+
+success_con:
+    load result
+    mov 1 M
+    load end_loop
+    mov 0;jmp
+
+end_loop:
+    load end_loop
+    mov 0 ;jmp
+
+
+
+

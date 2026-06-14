@@ -1,0 +1,112 @@
+.data
+count            #Number of required iterations
+test_value: 27   #starting value
+return_address   #Return address for function calls
+heap_address: HEAP     #Address of current heap address
+
+.text
+load test_value
+mov M D
+load heap_address
+inc A A
+mov D M
+
+loopstart:
+    mov 1 D
+    load test_value
+    and M D
+    load cond2
+    mov D ;jne
+
+    cond1: #If even   
+        load return_here
+        mov A D
+        load return_address
+        mov D M
+        load test_value
+        mov M D
+        load divarg
+        mov D M
+	    load div2
+        mov 0 ;jmp
+	    return_here:
+
+        load divarg
+        mov M D
+        load test_value
+        mov D M
+        load con_end
+        mov 0 ;jmp
+
+    cond2: #If odd
+        load test_value
+        mov M D
+        add M M
+        add M M
+        inc M M
+
+
+
+    con_end:
+        load count
+        inc M M
+
+        load test_value
+        mov M D
+        load heap_address
+        inc M M
+        mov M A
+        mov D M
+        load test_value
+        dec M D
+        load loopstart
+        mov D ;jne
+        load end_loop
+        mov 0 ;jmp
+
+.data
+divcount
+divarg
+
+.text
+div2: #divide divarg by 2
+    load divcount
+    mov 0 M
+
+    divloop:
+        load divarg
+        mov M D
+        load div_pos_con
+        mov D ;jgt
+        div_neg_con: 
+            load divarg
+            mov M D
+            add M M
+            inc M M
+            load div_con_end
+            mov 0 ;jmp
+
+        div_pos_con:
+            load divarg
+            mov M D
+            add M M
+
+        div_con_end:
+            load divcount
+            inc M M
+            mov M D
+            load 15
+            subr A D
+            load divloop
+            mov D ;jne
+
+    divloop_end:
+        load return_address
+        mov M A
+        mov 0 ;jmp
+
+    
+
+end_loop:
+    load end_loop
+    mov 0 ;jmp

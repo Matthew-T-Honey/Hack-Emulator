@@ -2,7 +2,6 @@ from datacell import DataCell
 
 class HackEmulator():
     __memory_locations = 24577 #The number of addressable memory locations
-    __code_size = 4096 #Size of the code section
     __stack_base = 16383
     
     def __init__(self):
@@ -41,16 +40,25 @@ class HackEmulator():
     def __set_S_value(self, value):
         self.set_value(self.__P_register.get_int(), value)
 
-    def run_program(self):
-        while(self.__PC_register.get_int() < self.__code_size):
-            #print(f"\nCommand: {self.__datacells[self.__PC_register.get_int()].get_bin()}")
-            self.__execute_command(self.__datacells[self.__PC_register.get_int()])
-            #print(f"PC: {self.__PC_register.get_int()}, D: {self.__D_register.get_int()}, A: {self.__A_register.get_int()}, P: {self.__P_register.get_int()}")
-            #for i in range(4096, 4101):
-            #    print(f"RAM[{i}]: {testEmulator.get_value(i)}")
+    def run_program(self, steps, debug = False, debug_ram_values = []):
+        for step in range(steps):
+            if debug:
+                print(f"\nPC: {self.__PC_register.get_int()}")
+                print(f"A: {self.__A_register.get_int()}")
+                print(f"M: {self.__get_M_value()}")
+                print(f"D: {self.__D_register.get_int()}")
+                print(f"P: {self.__P_register.get_int()}")
+                print(f"S: {self.__get_S_value()}")
+                print(f"Next Command: {self.__datacells[self.__PC_register.get_int()].get_bin()}")
+                for address in debug_ram_values:
+                   print(f"RAM[{address}]: {bin(self.get_value(address) % 2**16)}")
+                print(f"Stepcount: {step}")
+            self.execute_next_command()
+
             
 
-    def __execute_command(self, datacell):
+    def execute_next_command(self):
+        datacell = self.__datacells[self.__PC_register.get_int()]
         if datacell.get_bit(15) == 0:
             self.__A_command(datacell)
         else:
@@ -128,19 +136,13 @@ class HackEmulator():
     def __compute_jump(self, datacell, result):
         jump_condition = 4*datacell.get_bit(2) + 2*datacell.get_bit(1) + datacell.get_bit(0)
 
-        if jump_condition == 1 and result > 0:
-            self.__jump()
-        elif jump_condition == 2 and result == 0:
-            self.__jump()
-        elif jump_condition == 3 and result >= 0:
-            self.__jump()
-        elif jump_condition == 4 and result < 0:
-            self.__jump()
-        elif jump_condition == 5 and result != 0:
-            self.__jump()
-        elif jump_condition == 6 and result <= 0:
-            self.__jump()
-        elif jump_condition == 7:
+        if ((jump_condition == 1 and result > 0) or 
+            (jump_condition == 2 and result == 0) or 
+            (jump_condition == 3 and result >= 0) or 
+            (jump_condition == 4 and result < 0) or 
+            (jump_condition == 5 and result != 0) or 
+            (jump_condition == 6 and result <= 0) or 
+            (jump_condition == 7)):
             self.__jump()
         else:
             self.__PC_register.set_int(self.__PC_register.get_int() + 1)
@@ -154,17 +156,3 @@ class HackEmulator():
 
         for i in range(len(lines)):
             self.set_value(i, int(lines[i],2))
-
-if __name__ == "__main__":
-
-    testEmulator = HackEmulator()
-
-    testcode = open("./tests/testcode.txt","r")
-    testEmulator.load_program(testcode)
-    testcode.close()
-    print("Finished Loading")
-
-    testEmulator.run_program()
-    print("Finished Running")
-    print(f"RAM[4097]: {testEmulator.get_value(4097)}")
-

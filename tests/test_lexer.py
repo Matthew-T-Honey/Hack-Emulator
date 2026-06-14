@@ -1,11 +1,11 @@
 import sys
 sys.path.append("..")
-from src.parser import Parser
+from src.assembler.lexer import Lexer
 
 def test_basic():
-    parser = Parser()
+    lexer = Lexer()
     input = "this is a string"
-    output, comment = parser.parse_line(input)
+    output, comment = lexer.lex_line(input)
 
     assert("this" in output)
     assert("is" in output)
@@ -15,9 +15,9 @@ def test_basic():
     assert(comment == "")
 
 def test_whitespace():
-    parser = Parser()
+    lexer = Lexer()
     input = "   this    is a   string   "
-    output, comment = parser.parse_line(input)
+    output, comment = lexer.lex_line(input)
     assert("this" in output)
     assert("is" in output)
     assert("a" in output)
@@ -26,9 +26,9 @@ def test_whitespace():
     assert(comment == "")
 
 def test_comment():
-    parser = Parser()
+    lexer = Lexer()
     input = "this is #a comment"
-    output, comment = parser.parse_line(input)
+    output, comment = lexer.lex_line(input)
     assert("this" in output)
     assert("is" in output)
     assert("a" not in output)
@@ -36,22 +36,22 @@ def test_comment():
     assert(len(output) == 2)
     assert(comment == "a comment")
 
-    parser = Parser()
+    lexer = Lexer()
     input = "#this is a comment"
-    output, comment = parser.parse_line(input)
+    output, comment = lexer.lex_line(input)
     assert(len(output) == 0)
     assert(comment == "this is a comment")
 
-    parser = Parser()
+    lexer = Lexer()
     input = "this is not a comment #"
-    output, comment = parser.parse_line(input)
+    output, comment = lexer.lex_line(input)
     assert(len(output) == 5)
     assert(comment == "")
 
 def test_key_symbols():
-    parser = Parser()
+    lexer = Lexer()
     input = "this is .data a com;ment #and: a .comment"
-    output, comment = parser.parse_line(input)
+    output, comment = lexer.lex_line(input)
     assert("." in output)
     assert(";" in output)
     assert(":" not in output)
