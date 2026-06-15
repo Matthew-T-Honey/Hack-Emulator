@@ -8,7 +8,7 @@ class Assembler():
         parser = Parser()
         lexer = Lexer()
 
-        tokens, variable_list, label_list = lexer.lex_file(input_file)
+        tokens = lexer.lex_file(input_file)
 
         if debug:
             print("After Lexing:\n")
@@ -17,7 +17,7 @@ class Assembler():
                     print(token.get_contents(), end = " ")
                 print("")
 
-        parser.parse_tokens(emulator, tokens, variable_list, label_list)
+        parser.parse_tokens(emulator, tokens)
 
         if debug:
             print("\nAfter Parsing:\n")
@@ -32,7 +32,7 @@ if __name__ == "__main__":
     emulator = HackEmulator()
     assembler = Assembler()
 
-    f = open("tests/test_files/stacktest.txt","r")
+    f = open("tests/test_files/collatztest.txt","r")
     assembler.assemble(emulator, f, debug = True)
     f.close()
 

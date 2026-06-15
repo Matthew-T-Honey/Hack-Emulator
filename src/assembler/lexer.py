@@ -24,13 +24,9 @@ class Lexer():
     __keywords = ["screen", "kbd", "heap"]
 
     def __init__(self):
-        self.__variable_list = []
-        self.__label_list = []
         self.__section_type = None
 
     def lex_file(self, file):
-        self.__variable_list = []
-        self.__label_list = []
         self.__section_type = None
 
         file_tokens = []
@@ -41,7 +37,7 @@ class Lexer():
             if line_tokens != []:
                 file_tokens.append(line_tokens)
 
-        return file_tokens, self.__variable_list, self.__label_list
+        return file_tokens
     
     def __lex_line(self, line):
         
@@ -146,13 +142,7 @@ class Lexer():
         if self.__is_a_blocked_string(string_list[0]):
             raise SyntaxError(f"Invalid variable name: {string_list[0]}")
 
-        if string_list[0] in self.__variable_list:
-            raise SyntaxError(f"{string_list[0]} already exists as a variable name")
-        if string_list[0] in self.__label_list:
-            raise SyntaxError(f"{string_list[0]} already exists as a label name")
-
         if len(string_list) == 1:
-            self.__variable_list.append(string_list[0])
             return [Token(string_list[0], TokenType.VARIABLE_IDENTFIER)]
         if len(string_list) != 3:
             raise SyntaxError("Invalid variable declaration")
@@ -166,7 +156,6 @@ class Lexer():
             tokenlist.append(Token(string_list[2].lower(), TokenType.KEYWORD))
         else:
             raise SyntaxError("Expected an integer value")
-        self.__variable_list.append(string_list[0])
 
         return tokenlist
 
@@ -178,13 +167,6 @@ class Lexer():
         
         if self.__is_a_blocked_string(string_list[0]):
             raise SyntaxError(f"Invalid label name: {string_list[0]}")
-
-        if string_list[0] in self.__variable_list:
-            raise SyntaxError(f"{string_list[0]} already exists as a variable name")
-        if string_list[0] in self.__label_list:
-            raise SyntaxError(f"{string_list[0]} already exists as a label name")
-
-        self.__label_list.append(string_list[0])
 
         return [Token(string_list[0], TokenType.LABEL)]
 

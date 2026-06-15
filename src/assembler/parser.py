@@ -46,11 +46,11 @@ class Parser():
     
     __keywords = ["SCREEN","KBD","HEAP"]
         
-    def parse_tokens(self, emulator, tokens, variable_list, label_list):
+    def parse_tokens(self, emulator, tokens):
         codelines = self.__get_num_of_codelines(tokens)
         self.__remove_comments_and_sections(tokens)
-        self.__remove_labels(tokens, label_list)
-        self.__store_variables(tokens, variable_list, codelines)
+        self.__remove_labels(tokens)
+        self.__store_variables(tokens, codelines)
         self.__replace_pop_push_instructions(tokens)
         self.__assemble_instructions(emulator, tokens)
 
@@ -65,7 +65,7 @@ class Parser():
             elif tokens[i][0].get_type() == TokenType.SECTION_DECLARATION:
                 tokens.pop(i)
 
-    def __store_variables(self, tokens, variable_list, codelines):
+    def __store_variables(self, tokens, codelines):
 
         variable_address = {}
         keyword_address = {"SCREEN" : 16384,
@@ -103,7 +103,7 @@ class Parser():
                 else:
                     raise SyntaxError(f"Unrecognised variable: {tokenline[1].get_contents()}")
 
-    def __remove_labels(self, tokens, labels_list):
+    def __remove_labels(self, tokens):
 
         label_address = {}
 
