@@ -37,3 +37,45 @@ jjj Species the Jump condition (as standard Hack)
 - 101 - Jump if not equal to 0
 - 110 - Jump if less than or equal to 0
 - 111 - Jump
+
+## Assembly Specification
+
+Split code into .text and .data sections
+
+"#" - Used for comments
+
+Keywords:
+- HEAP: evaluates to the address after the code segment
+- SCREEN: evaluates to 16384
+- KBD: evaluates to 24576
+
+### .data section:
+
+identifier [":", (integer literal | keyword)]	- Defines a new variable with keyword "identifier", defaults to 0 if not initialised
+
+### .text section:
+
+"label": - Defines a jump label
+
+- \<dest> ::= (A|D|M|S|P)      - Removing multiple assignment
+- \<jump> ::= ";", ("jlt","jeq","jgt","jle","jne","jge","jmp")
+
+### A instruction
+- load (identifier | label | integer literal | keyword) 
+
+### C instructions
+- mov, (A|D|M|S|P|"1"|"0"|"-1"), [\<dest>], [\<jump>]
+- inc, (A|D|M|S|P), [\<dest>], [\<jump>]
+- dec, (A|D|M|S|P), [\<dest>], [\<jump>]
+- neg, (A|D|M|S|P), [\<dest>], [\<jump>]
+- not, (A|D|M|S|P), [\<dest>], [\<jump>]
+
+- add, (A|M|S|P), [\<dest>], [\<jump>]
+- subl, (A|M|S|P), [\<dest>], [\<jump>]  - D-A
+- subr, (A|M|S|P), [\<dest>], [\<jump>]  - A-D
+- and, (A|M|S|P), [\<dest>], [\<jump>]
+- or, (A|M|S|P), [\<dest>], [\<jump>]
+
+### Stack shorthand:
+- push, (A|D|M|S|P|"1"|"0"|"-1"), [\<jump>] ::= mov, (A|D|M|S|P|"1"|"0"|"-1"), S [\<jump>]
+- pop, [\<dest>], [\<jump>] ::= mov, S, [\<dest>], [\<jump>]

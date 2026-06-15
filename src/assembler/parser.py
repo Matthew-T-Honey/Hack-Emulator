@@ -48,75 +48,60 @@ class Parser():
         
     def parse_tokens(self, emulator, tokens, variable_list, label_list):
         codelines = self.__get_num_of_codelines(tokens)
-        self.__remove_comments(tokens)
-        self.__store_variables(emulator, tokens, variable_list, codelines)
-        self.__remove_data_section(tokens)
+        self.__remove_comments_and_sections(tokens)
         self.__remove_labels(tokens, label_list)
+        self.__store_variables(tokens, variable_list, codelines)
         self.__replace_pop_push_instructions(tokens)
         self.__assemble_instructions(emulator, tokens)
 
 
 
-    def __remove_comments(self, tokens):
+    def __remove_comments_and_sections(self, tokens):
         for i in range(len(tokens) -1, -1, -1):
             if tokens[i][-1].get_type() == TokenType.COMMENT:
                 tokens[i].pop(-1)
                 if len(tokens[i]) == 0:
                     tokens.pop(i)
+            elif tokens[i][0].get_type() == TokenType.SECTION_DECLARATION:
+                tokens.pop(i)
 
-    def __store_variables(self, emulator, tokens, variable_list, codelines):
-        static_address = codelines
-        variable_table = {}
-        for variable in variable_list:
-            variable_table[variable] = static_address
-            static_address += 1
-        
+    def __store_variables(self, tokens, variable_list, codelines):
+
+        variable_address = {}
         keyword_address = {"SCREEN" : 16384,
                            "KBD" : 24576}
 
-        keyword_address["HEAP"] = codelines + len(variable_list)
-        
-        section = None
+        keyword_address["HEAP"] = codelines
+
+        #Get address of each variable and replace with int
+        for i in range(len(tokens)):
+            if tokens[i][0].get_type() == TokenType.VARIABLE_IDENTFIER:
+                if tokens[i][0].get_contents() not in variable_address:
+                    variable = tokens[i][0].get_contents()
+                    variable_address[variable] = i
+                    if len(tokens[i]) == 1:
+                        value = 0
+                    elif tokens[i][1].get_type() == TokenType.INTEGER_LITERAL:
+                        value = tokens[i][1].get_contents()
+                    elif tokens[i][1].get_type() == TokenType.KEYWORD:
+                        value = keyword_address[tokens[i][1].get_contents()]
+                    tokens[i] = [Token(value, TokenType.INTEGER_LITERAL)]
+                else:
+                    raise SyntaxError(f"Variable: {tokens[i][0].get_contents()} has already been defined")
+
+        #Replace variables and keywords with load addresses
         for tokenline in tokens:
-            if tokenline[0].get_type() == TokenType.SECTION_DECLARATION:
-                section = tokenline[0].get_contents()
-            elif section == "data":
-                variable = tokenline[0].get_contents()
-                if len(tokenline) == 1:
-                    value = 0
-                elif tokenline[1].get_type() == TokenType.INTEGER_LITERAL:
-                    value = tokenline[1].get_contents()
-                elif tokenline[1].get_type() == TokenType.KEYWORD:
-                    value = keyword_address[tokenline[1].get_contents()]
-                if variable not in variable_list:
-                    raise SyntaxError(f"Unrecognised Variable name: {variable}")
-                address = variable_table[variable]
-                emulator.set_value(address, value)
-
-            elif section == "text":
-                if tokenline[0].get_contents() == "load":
-                    if tokenline[1].get_contents() in variable_list:
-                        variable = tokenline[1].get_contents()
-                        address = variable_table[variable]
-                        tokenline[1] = Token(address, TokenType.INTEGER_LITERAL)
-                    elif tokenline[1].get_contents() in self.__keywords:
-                        keyword = tokenline[1].get_contents()
-                        address = keyword_address[keyword]
-                        tokenline[1] = Token(address, TokenType.INTEGER_LITERAL)
-            else:
-                raise SyntaxError("Expected section declaration")
-
-    def __remove_data_section(self, tokens):
-        section = None
-        i = 0
-        while i < len(tokens):
-            if tokens[i][0].get_type() == TokenType.SECTION_DECLARATION:
-                section = tokens[i][0].get_contents()
-                tokens.pop(i)
-            elif section == "data":
-                tokens.pop(i)
-            else:
-                i += 1
+            if tokenline[0].get_contents() == "load" and tokenline[1].get_type() == TokenType.VARIABLE_IDENTFIER:
+                if tokenline[1].get_contents() in variable_address:
+                    variable = tokenline[1].get_contents()
+                    address = variable_address[variable]
+                    tokenline[1] = Token(address, TokenType.INTEGER_LITERAL)
+                elif tokenline[1].get_contents() in self.__keywords:
+                    keyword = tokenline[1].get_contents()
+                    address = keyword_address[keyword]
+                    tokenline[1] = Token(address, TokenType.INTEGER_LITERAL)
+                else:
+                    raise SyntaxError(f"Unrecognised variable: {tokenline[1].get_contents()}")
 
     def __remove_labels(self, tokens, labels_list):
 
@@ -140,13 +125,13 @@ class Parser():
                 if tokenline[1].get_contents() in label_address:
                     address = label_address[tokenline[1].get_contents()]
                     tokenline[1] = Token(address, TokenType.INTEGER_LITERAL)
-                else:
-                    raise SyntaxError(f"Unrecognised label: {tokenline[1].get_contents()}")
 
     def __assemble_instructions(self, emulator, tokens):
 
         for i in range(len(tokens)):
-            if tokens[i][0].get_contents() == "load":
+            if tokens[i][0].get_type() == TokenType.INTEGER_LITERAL:
+                emulator.set_value(i,tokens[i][0].get_contents())
+            elif tokens[i][0].get_contents() == "load":
                 if tokens[i][1].get_type() != TokenType.INTEGER_LITERAL:
                     raise("load command expected Integer literal")
                 emulator.set_value(i,tokens[i][1].get_contents())
@@ -202,7 +187,7 @@ class Parser():
     def __get_num_of_codelines(self, tokens):
         codelines_count = 0
         for tokenline in tokens:
-            if tokenline[0].get_type() == TokenType.INSTRUCTION:
+            if tokenline[0].get_type() in [TokenType.INSTRUCTION, TokenType.VARIABLE_IDENTFIER, TokenType.INTEGER_LITERAL]:
                 codelines_count += 1
         return codelines_count
 

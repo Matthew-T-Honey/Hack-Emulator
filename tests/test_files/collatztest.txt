@@ -1,14 +1,9 @@
-.data
-count            #Number of required iterations
-test_value: 27   #starting value
-return_address   #Return address for function calls
-heap_address: HEAP     #Address of current heap address
-
 .text
 load test_value
 mov M D
 load heap_address
-inc A A
+inc M M
+mov M A
 mov D M
 
 loopstart:
@@ -63,6 +58,12 @@ loopstart:
         mov D ;jne
         load end_loop
         mov 0 ;jmp
+
+.data
+count            #Number of required iterations
+test_value: 27   #starting value
+return_address   #Return address for function calls
+heap_address: HEAP     #Address of current heap address
 
 .data
 divcount

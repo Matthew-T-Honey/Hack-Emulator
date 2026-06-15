@@ -32,16 +32,16 @@ if __name__ == "__main__":
     emulator = HackEmulator()
     assembler = Assembler()
 
-    f = open("tests/test_files/collatztest.txt","r")
-    assembler.assemble(emulator, f)
+    f = open("tests/test_files/stacktest.txt","r")
+    assembler.assemble(emulator, f, debug = True)
     f.close()
 
     print("\nBefore Running:\n")
     for i in range(128):
         print(f"RAM[{i}]: {bin(emulator.get_value(i) % 2**16)}")
 
-    #emulator.run_program(100000, debug = True, debug_ram_values = range(85,95))
-    emulator.run_program(100000)
+    emulator.run_program(100000, debug = False, debug_ram_values = range(45,50))
+    #emulator.run_program(100000)
 
     print("\nAfter Running:\n")
     for i in range(256):
