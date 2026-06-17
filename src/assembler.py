@@ -1,6 +1,6 @@
-from assembler.parser import Parser
-from assembler.lexer import Lexer
-from emulator import HackEmulator
+from src.assembler_tools.parser import Parser
+from src.assembler_tools.lexer import Lexer
+from src.emulator import HackEmulator
 
 class Assembler():
 
@@ -25,25 +25,3 @@ class Assembler():
                 for token in tokenlist:
                     print(token.get_contents(), end = " ")
                 print("")
-
-
-
-if __name__ == "__main__":
-    emulator = HackEmulator()
-    assembler = Assembler()
-
-    f = open("tests/test_files/collatztest.txt","r")
-    assembler.assemble(emulator, f, debug = True)
-    f.close()
-
-    print("\nBefore Running:\n")
-    for i in range(128):
-        print(f"RAM[{i}]: {bin(emulator.get_value(i) % 2**16)}")
-
-    emulator.run_program(100000, debug = False, debug_ram_values = range(45,50))
-    #emulator.run_program(100000)
-
-    print("\nAfter Running:\n")
-    for i in range(256):
-        print(f"RAM[{i}]: {bin(emulator.get_value(i) % 2**16)}")
-

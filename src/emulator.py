@@ -1,4 +1,4 @@
-from datacell import DataCell
+from src.datacell import DataCell
 
 class HackEmulator():
     __memory_locations = 24577 #The number of addressable memory locations

@@ -1,0 +1,380 @@
+# The Mother of all Test Scripts (TMOATS)
+
+#Address 3 for test result data
+#Address 4 for number of tests
+#Adresss 5 for the result of the test (-1 or 1)
+
+.text
+load movtests
+mov 0 ;jmp
+
+.data
+testspassed: 0
+targettests: 19
+testresult: 0
+
+#===========================================================================================
+#                                   MOV tests - 4 tests
+#===========================================================================================
+
+.data
+movtest1  
+movtest2: -1
+movtest3  
+movtest4  
+
+.text
+movtests:
+
+#Setup mov tests
+    load movtest1
+    mov 1 m
+    load movtest2
+    mov -1 M
+    load 4
+    mov A d
+    load movtest3
+    mov D M
+    load 32767
+    mov A D
+    load movtest4
+    mov D M
+
+#test movtest1
+    load movtest1  
+    mov M D
+    load 1
+    subl A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+#test movtest2
+    load movtest2 
+    mov M D
+    load 1
+    add A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+#test movtest3
+    load movtest3
+    mov M D
+    load 4
+    subl A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+#test movtest4
+    load movtest4
+    mov M D
+    load 32767
+    subl A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+    load inctests
+    mov 0 ;jmp
+
+#===========================================================================================
+#                                   INC tests - 3 tests
+#===========================================================================================
+
+.data
+inctest1: 1  #2
+inctest2: -1  #0
+inctest3: 32767  #-32768
+
+.text
+inctests:
+#Setup inc tests
+    load inctest1
+    inc M m
+    load inctest2
+    inc M m
+    load inctest3
+    inc M m
+
+#test inctest1
+    load inctest1
+    mov M D
+    load 2
+    subl A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+#test inctest2
+    load inctest2
+    mov M D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+#test inctest3
+    load inctest3
+    mov M D
+    load 32767
+    not A A
+    subl A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+    load dectests
+    mov 0 ;jmp
+
+#===========================================================================================
+#                                   DEC tests - 3 tests
+#===========================================================================================
+
+.data
+dectest1: 1         #0
+dectest2: 0         #-1
+dectest3: -32768    #32767
+
+.text
+dectests:
+    #Setup dec tests
+    load dectest1
+    dec M m
+    load dectest2
+    dec M m
+    load dectest3
+    dec M m
+
+#test dectest1
+    load dectest1
+    mov M D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+#test dectest2
+    load dectest2
+    mov M D
+    load 1
+    add A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+#test dectest3
+    load dectest3
+    mov M D
+    load 32767
+    subl A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+    load negtests
+    mov 0 ;jmp
+
+#===========================================================================================
+#                                   NEG tests - 3 tests
+#===========================================================================================
+
+.data
+negtest1: 1  #-1
+negtest2: 0  #0
+negtest3: -32768  #-32768
+
+
+.text
+negtests:
+#Setup neg tests
+    load negtest1
+    neg M M
+    load negtest2
+    neg M M
+    load negtest3
+    neg M M
+
+#test negtest1
+    load negtest1
+    mov M D
+    load 1
+    add A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+#test negtest2
+    load negtest2
+    mov M D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+#test negtest3
+    load negtest3
+    mov M D
+    load 32767
+    not A A
+    subl A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+    load nottests
+    mov 0 ;jmp
+
+
+#===========================================================================================
+#                                   NOT tests - 3 tests
+#===========================================================================================
+
+.data
+nottest1: 0  #-1
+nottest2: 1  #-2
+nottest3: -32768  #32767
+
+.text
+nottests:
+    #Setup not tests
+    load nottest1
+    not M M
+    load nottest2
+    not M M
+    load nottest3
+    not M M
+
+#test nottest1
+    load nottest1
+    mov M D
+    load 1
+    add A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+#test nottest2
+    load nottest2
+    mov M D
+    load 2
+    add A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+#test nottest3
+    load nottest3
+    mov M D
+    load 32767
+    subl A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+    load addtests
+    mov 0 ;jmp
+
+#===========================================================================================
+#                                   add tests - 3 tests
+#===========================================================================================
+
+.data
+addtest1: 1  #1 + -2 = -1
+addtest2: 32767  #32767 + 1 = -32768
+addtest3: -32768  #-32768 + 32767 = -1
+
+.text
+addtests:
+    #Setup add tests
+    load 2
+    neg A D
+    load addtest1
+    add M M
+    load 1
+    mov A D
+    load addtest2
+    add M M
+    load 32767
+    mov A D
+    load addtest3
+    add M M
+
+#test addtest1
+    load addtest1
+    mov M D
+    load 1
+    add A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+#test addtest2
+    load addtest2
+    mov M D
+    load 32767
+    not A A
+    subl A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+#test addtest3
+    load addtest3
+    mov M D
+    load 1
+    add A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+    load successcondition
+    mov 0 ;jmp
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+successcondition:
+    load testresult
+    mov 1 M
+    load endloop
+    mov 0 ;jmp
+
+failcondition:
+    load testresult
+    mov -1 M
+    load endloop
+    mov 0 ;jmp
+
+endloop:
+    load endloop
+    mov 0 ;jmp

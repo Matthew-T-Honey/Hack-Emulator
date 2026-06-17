@@ -1,4 +1,4 @@
-from assembler.tokentype import TokenType
+from src.assembler_tools.tokentype import TokenType
 
 class Token():
     def __init__(self, contents, type):

@@ -1,5 +1,5 @@
-from assembler.tokentype import TokenType
-from assembler.lexertoken import Token
+from src.assembler_tools.tokentype import TokenType
+from src.assembler_tools.lexertoken import Token
 
 class Parser():
     __destinations = {"None":0b000,

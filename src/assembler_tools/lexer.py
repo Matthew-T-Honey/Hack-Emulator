@@ -1,5 +1,5 @@
-from assembler.tokentype import TokenType
-from assembler.lexertoken import Token
+from src.assembler_tools.tokentype import TokenType
+from src.assembler_tools.lexertoken import Token
 
 
 class Lexer():
@@ -32,8 +32,12 @@ class Lexer():
         file_tokens = []
         file_lines = file.readlines()
 
-        for line in file_lines:
-            line_tokens = self.__lex_line(line)
+        for i in range(len(file_lines)):
+            line = file_lines[i]
+            try:
+                line_tokens = self.__lex_line(line)
+            except SyntaxError as e:
+                raise SyntaxError(f"Syntax error on line {i+1}: "+str(e))
             if line_tokens != []:
                 file_tokens.append(line_tokens)
 
@@ -176,6 +180,8 @@ class Lexer():
             raise SyntaxError("Invalid load declaration")
         tokenlist.append(Token("load", TokenType.INSTRUCTION))
         if self.__is_an_integer(string_list[1]):
+            if int(string_list[1]) < 0:
+                raise SyntaxError("Load requires a positive value")
             tokenlist.append(Token(int(string_list[1]), TokenType.INTEGER_LITERAL))
         elif string_list[1].lower() in self.__keywords:
             tokenlist.append(Token(string_list[1].lower(), TokenType.KEYWORD))
