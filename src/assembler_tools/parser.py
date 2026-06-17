@@ -91,7 +91,7 @@ class Parser():
 
         #Replace variables and keywords with load addresses
         for tokenline in tokens:
-            if tokenline[0].get_contents() == "load" and tokenline[1].get_type() == TokenType.VARIABLE_IDENTFIER:
+            if tokenline[0].get_contents() == "load" and tokenline[1].get_type() in [TokenType.VARIABLE_IDENTFIER, TokenType.KEYWORD]:
                 if tokenline[1].get_contents() in variable_address:
                     variable = tokenline[1].get_contents()
                     address = variable_address[variable]
@@ -133,7 +133,7 @@ class Parser():
                 emulator.set_value(i,tokens[i][0].get_contents())
             elif tokens[i][0].get_contents() == "load":
                 if tokens[i][1].get_type() != TokenType.INTEGER_LITERAL:
-                    raise("load command expected Integer literal")
+                    raise SyntaxError(f"load command expected Integer literal, recieved: {tokens[i][1].get_contents()}")
                 emulator.set_value(i,tokens[i][1].get_contents())
             else:
                 emulator.set_value(i,self.__get_instruction(tokens[i]))

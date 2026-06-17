@@ -3,6 +3,7 @@ sys.path.append("..")
 from src.assembler import Assembler
 from src.emulator import HackEmulator
 
+
 def test_tmoats():
 
     emulator = HackEmulator()
