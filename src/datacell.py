@@ -26,9 +26,9 @@ class DataCell():
         return int(self.__value)
     
     def get_bin(self):
-        temp = int(self.__value) % 2**self.__size
+        pos_val = int(self.__value) % 2**self.__size
 
-        return bin(temp)
+        return bin(pos_val)
 
     def set_int(self, value):
         if type(value) != int:

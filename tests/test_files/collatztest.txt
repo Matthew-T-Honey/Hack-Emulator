@@ -22,9 +22,9 @@ loopstart:
         mov M D
         load divarg
         mov D M
-	    load div2
+        load div2
         mov 0 ;jmp
-	    return_here:
+        return_here:
 
         load divarg
         mov M D

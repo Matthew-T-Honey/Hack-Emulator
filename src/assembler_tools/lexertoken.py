@@ -1,17 +1,19 @@
 from src.assembler_tools.tokentype import TokenType
 
 class Token():
-    def __init__(self, contents, type):
-        self.__contents = contents
+    def __init__(self, text, type):
+        self.__text = text
         self.__type = type
 
-    def get_contents(self):
-        if self.__type in [TokenType.SECTION_DECLARATION, TokenType.INSTRUCTION, TokenType.JUMP]:
-            return self.__contents.lower()
-        if self.__type in [TokenType.KEYWORD, TokenType.OPERAND, TokenType.DESTINATION]:
-            return self.__contents.upper()
-        return self.__contents
+    @property
+    def text(self):
+        if self.type in [TokenType.SECTION_DECLARATION, TokenType.INSTRUCTION, TokenType.JUMP]:
+            return self.__text.lower()
+        if self.type in [TokenType.KEYWORD, TokenType.OPERAND, TokenType.DESTINATION]:
+            return self.__text.upper()
+        return self.__text
 
-    def get_type(self):
+    @property
+    def type(self):
         return self.__type
     

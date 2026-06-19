@@ -58,11 +58,11 @@ class Parser():
 
     def __remove_comments_and_sections(self, tokens):
         for i in range(len(tokens) -1, -1, -1):
-            if tokens[i][-1].get_type() == TokenType.COMMENT:
+            if tokens[i][-1].type == TokenType.COMMENT:
                 tokens[i].pop(-1)
                 if len(tokens[i]) == 0:
                     tokens.pop(i)
-            elif tokens[i][0].get_type() == TokenType.SECTION_DECLARATION:
+            elif tokens[i][0].type == TokenType.SECTION_DECLARATION:
                 tokens.pop(i)
 
     def __store_variables(self, tokens, codelines):
@@ -75,33 +75,33 @@ class Parser():
 
         #Get address of each variable and replace with int
         for i in range(len(tokens)):
-            if tokens[i][0].get_type() == TokenType.VARIABLE_IDENTFIER:
-                if tokens[i][0].get_contents() not in variable_address:
-                    variable = tokens[i][0].get_contents()
+            if tokens[i][0].type == TokenType.VARIABLE_IDENTFIER:
+                if tokens[i][0].text not in variable_address:
+                    variable = tokens[i][0].text
                     variable_address[variable] = i
                     if len(tokens[i]) == 1:
                         value = 0
-                    elif tokens[i][1].get_type() == TokenType.INTEGER_LITERAL:
-                        value = tokens[i][1].get_contents()
-                    elif tokens[i][1].get_type() == TokenType.KEYWORD:
-                        value = keyword_address[tokens[i][1].get_contents()]
+                    elif tokens[i][1].type == TokenType.INTEGER_LITERAL:
+                        value = tokens[i][1].text
+                    elif tokens[i][1].type == TokenType.KEYWORD:
+                        value = keyword_address[tokens[i][1].text]
                     tokens[i] = [Token(value, TokenType.INTEGER_LITERAL)]
                 else:
-                    raise SyntaxError(f"Variable: {tokens[i][0].get_contents()} has already been defined")
+                    raise SyntaxError(f"Variable: {tokens[i][0].text} has already been defined")
 
         #Replace variables and keywords with load addresses
         for tokenline in tokens:
-            if tokenline[0].get_contents() == "load" and tokenline[1].get_type() in [TokenType.VARIABLE_IDENTFIER, TokenType.KEYWORD]:
-                if tokenline[1].get_contents() in variable_address:
-                    variable = tokenline[1].get_contents()
+            if tokenline[0].text == "load" and tokenline[1].type in [TokenType.VARIABLE_IDENTFIER, TokenType.KEYWORD]:
+                if tokenline[1].text in variable_address:
+                    variable = tokenline[1].text
                     address = variable_address[variable]
                     tokenline[1] = Token(address, TokenType.INTEGER_LITERAL)
-                elif tokenline[1].get_contents() in self.__keywords:
-                    keyword = tokenline[1].get_contents()
+                elif tokenline[1].text in self.__keywords:
+                    keyword = tokenline[1].text
                     address = keyword_address[keyword]
                     tokenline[1] = Token(address, TokenType.INTEGER_LITERAL)
                 else:
-                    raise SyntaxError(f"Unrecognised variable: {tokenline[1].get_contents()}")
+                    raise SyntaxError(f"Unrecognised variable: {tokenline[1].text}")
 
     def __remove_labels(self, tokens):
 
@@ -110,50 +110,50 @@ class Parser():
         #Get address of each label
         i = 0
         while i < len(tokens):
-            if tokens[i][0].get_type() == TokenType.LABEL:
-                if tokens[i][0].get_contents() not in label_address:
-                    label_address[tokens[i][0].get_contents()] = i
+            if tokens[i][0].type == TokenType.LABEL:
+                if tokens[i][0].text not in label_address:
+                    label_address[tokens[i][0].text] = i
                     tokens.pop(i)
                     i -= 1
                 else:
-                    raise SyntaxError(f"Label: {tokens[i][0].get_contents()} has already been defined")
+                    raise SyntaxError(f"Label: {tokens[i][0].text} has already been defined")
             i += 1
 
         #Replace variables with load addresses
         for tokenline in tokens:
-            if tokenline[0].get_contents() == "load" and tokenline[1].get_type() == TokenType.VARIABLE_IDENTFIER:
-                if tokenline[1].get_contents() in label_address:
-                    address = label_address[tokenline[1].get_contents()]
+            if tokenline[0].text == "load" and tokenline[1].type == TokenType.VARIABLE_IDENTFIER:
+                if tokenline[1].text in label_address:
+                    address = label_address[tokenline[1].text]
                     tokenline[1] = Token(address, TokenType.INTEGER_LITERAL)
 
     def __assemble_instructions(self, emulator, tokens):
 
         for i in range(len(tokens)):
-            if tokens[i][0].get_type() == TokenType.INTEGER_LITERAL:
-                emulator.set_value(i,tokens[i][0].get_contents())
-            elif tokens[i][0].get_contents() == "load":
-                if tokens[i][1].get_type() != TokenType.INTEGER_LITERAL:
-                    raise SyntaxError(f"load command expected Integer literal, recieved: {tokens[i][1].get_contents()}")
-                emulator.set_value(i,tokens[i][1].get_contents())
+            if tokens[i][0].type == TokenType.INTEGER_LITERAL:
+                emulator.set_value(i,tokens[i][0].text)
+            elif tokens[i][0].text == "load":
+                if tokens[i][1].type != TokenType.INTEGER_LITERAL:
+                    raise SyntaxError(f"load command expected Integer literal, recieved: {tokens[i][1].text}")
+                emulator.set_value(i,tokens[i][1].text)
             else:
                 emulator.set_value(i,self.__get_instruction(tokens[i]))
 
     def __get_instruction(self, tokenline):
-        if tokenline[1].get_contents() in ["A","M","P","S"]:
-            operand = self.__operands[tokenline[1].get_contents()]
+        if tokenline[1].text in ["A","M","P","S"]:
+            operand = self.__operands[tokenline[1].text]
         else:
             operand = 0b00
         comp = self.__get_comp(tokenline)
         if len(tokenline) > 2:
-            if tokenline[2].get_contents() in ["D","A","M","P","S"]:
-                dest = self.__destinations[tokenline[2].get_contents()]
+            if tokenline[2].text in ["D","A","M","P","S"]:
+                dest = self.__destinations[tokenline[2].text]
                 if len(tokenline) > 3:
-                    jump = self.__jumps[tokenline[3].get_contents()]
+                    jump = self.__jumps[tokenline[3].text]
                 else:
                     jump = self.__jumps["No Jump"]
             else:
                 dest = self.__destinations["None"]
-                jump = self.__jumps[tokenline[2].get_contents()]
+                jump = self.__jumps[tokenline[2].text]
         else:
             dest = self.__destinations["None"]
             jump = self.__jumps["No Jump"]
@@ -168,26 +168,26 @@ class Parser():
     
     def __get_comp(self, tokenline):
 
-        if tokenline[1].get_contents() in ["A","M","P","S"]:
+        if tokenline[1].text in ["A","M","P","S"]:
             operand = "O"
         else:
-            operand = tokenline[1].get_contents()
+            operand = tokenline[1].text
 
-        return self.__instructions[tokenline[0].get_contents()][operand]
+        return self.__instructions[tokenline[0].text][operand]
 
     def __replace_pop_push_instructions(self, tokens):
         for tokenline in tokens:
-            if tokenline[0].get_contents() == "push":
+            if tokenline[0].text == "push":
                 tokenline[0] = Token("mov",TokenType.INSTRUCTION)
                 tokenline.insert(2, Token("s",TokenType.DESTINATION))
-            if tokenline[0].get_contents() == "pop":
+            if tokenline[0].text == "pop":
                 tokenline[0] = Token("mov",TokenType.INSTRUCTION)
                 tokenline.insert(1, Token("s",TokenType.OPERAND))
 
     def __get_num_of_codelines(self, tokens):
         codelines_count = 0
         for tokenline in tokens:
-            if tokenline[0].get_type() in [TokenType.INSTRUCTION, TokenType.VARIABLE_IDENTFIER, TokenType.INTEGER_LITERAL]:
+            if tokenline[0].type in [TokenType.INSTRUCTION, TokenType.VARIABLE_IDENTFIER, TokenType.INTEGER_LITERAL]:
                 codelines_count += 1
         return codelines_count
 
