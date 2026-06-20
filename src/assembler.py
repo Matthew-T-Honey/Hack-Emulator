@@ -4,13 +4,10 @@ from src.emulator import HackEmulator
 
 class Assembler():
     def assemble(self, emulator, input_file):
-        tokens = self.get_tokens(input_file)
-        self.parse_tokens(emulator, tokens)
 
-    def get_tokens(self, input_file):
         lexer = Lexer()
-        return lexer.lex_file(input_file)
-    
-    def parse_tokens(self, emulator, tokens):
+        tokens = lexer.lex_file(input_file)
+        symbol_table = lexer.symbol_table
+
         parser = Parser()
-        parser.parse_tokens(emulator, tokens)
+        parser.parse_tokens(emulator, tokens, symbol_table)

@@ -7,13 +7,16 @@ class Token():
 
     @property
     def text(self):
-        if self.type in [TokenType.SECTION_DECLARATION, TokenType.INSTRUCTION, TokenType.JUMP]:
+        if self.type in [TokenType.INSTRUCTION, TokenType.JUMP]:
             return self.__text.lower()
-        if self.type in [TokenType.KEYWORD, TokenType.OPERAND, TokenType.DESTINATION]:
+        if self.type in [TokenType.OPERAND, TokenType.DESTINATION]:
             return self.__text.upper()
         return self.__text
 
     @property
     def type(self):
         return self.__type
+    
+    def __str__(self):
+        return str(self.text)
     

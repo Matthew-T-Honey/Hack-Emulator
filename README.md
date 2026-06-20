@@ -49,9 +49,15 @@ Keywords:
 - SCREEN: evaluates to 16384
 - KBD: evaluates to 24576
 
+\<symbol> ::= (keyword | label | identifier)
+
 ### .data section:
 
-identifier [":", (integer literal | keyword)]	- Defines a new variable with keyword "identifier", defaults to 0 if not initialised
+"identifier" [":", (integer literal | \<symbol>)]	- Defines a new variable with keyword 
+
+"identifier", defaults to 0 if not initialised
+
+integer literal - Defines an integer literal value with no corresponding identifier
 
 ### .text section:
 
@@ -61,7 +67,7 @@ identifier [":", (integer literal | keyword)]	- Defines a new variable with keyw
 - \<jump> ::= ";", ("jlt","jeq","jgt","jle","jne","jge","jmp")
 
 ### A instruction
-- load (identifier | label | integer literal | keyword) 
+- load (integer literal | \<symbol>) 
 
 ### C instructions
 - mov, (A|D|M|S|P|"1"|"0"|"-1"), [\<dest>], [\<jump>]

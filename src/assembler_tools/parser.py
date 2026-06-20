@@ -42,101 +42,46 @@ class Parser():
                   "M" : 0b01,
                   "P" : 0b10,
                   "S" : 0b11}
-
-    
-    __keywords = ["SCREEN","KBD","HEAP"]
         
-    def parse_tokens(self, emulator, tokens):
-        codelines = self.__get_num_of_codelines(tokens)
-        self.__remove_comments_and_sections(tokens)
-        self.__remove_labels(tokens)
-        self.__store_variables(tokens, codelines)
-        self.__replace_pop_push_instructions(tokens)
-        self.__assemble_instructions(emulator, tokens)
-
-
-
-    def __remove_comments_and_sections(self, tokens):
-        for i in range(len(tokens) -1, -1, -1):
-            if tokens[i][-1].type == TokenType.COMMENT:
-                tokens[i].pop(-1)
-                if len(tokens[i]) == 0:
-                    tokens.pop(i)
-            elif tokens[i][0].type == TokenType.SECTION_DECLARATION:
-                tokens.pop(i)
-
-    def __store_variables(self, tokens, codelines):
-
-        variable_address = {}
-        keyword_address = {"SCREEN" : 16384,
-                           "KBD" : 24576}
-
-        keyword_address["HEAP"] = codelines
-
-        #Get address of each variable and replace with int
+    def parse_tokens(self, emulator, tokens, symbol_table):
         for i in range(len(tokens)):
-            if tokens[i][0].type == TokenType.VARIABLE_IDENTFIER:
-                if tokens[i][0].text not in variable_address:
-                    variable = tokens[i][0].text
-                    variable_address[variable] = i
-                    if len(tokens[i]) == 1:
-                        value = 0
-                    elif tokens[i][1].type == TokenType.INTEGER_LITERAL:
-                        value = tokens[i][1].text
-                    elif tokens[i][1].type == TokenType.KEYWORD:
-                        value = keyword_address[tokens[i][1].text]
-                    tokens[i] = [Token(value, TokenType.INTEGER_LITERAL)]
-                else:
-                    raise SyntaxError(f"Variable: {tokens[i][0].text} has already been defined")
+            try:
+                self.parse_line(emulator, tokens[i], i, symbol_table)
+            except SyntaxError as e:
+                raise SyntaxError(f"Syntax error on line {i+1}: "+str(e))
 
-        #Replace variables and keywords with load addresses
-        for tokenline in tokens:
-            if tokenline[0].text == "load" and tokenline[1].type in [TokenType.VARIABLE_IDENTFIER, TokenType.KEYWORD]:
-                if tokenline[1].text in variable_address:
-                    variable = tokenline[1].text
-                    address = variable_address[variable]
-                    tokenline[1] = Token(address, TokenType.INTEGER_LITERAL)
-                elif tokenline[1].text in self.__keywords:
-                    keyword = tokenline[1].text
-                    address = keyword_address[keyword]
-                    tokenline[1] = Token(address, TokenType.INTEGER_LITERAL)
-                else:
-                    raise SyntaxError(f"Unrecognised variable: {tokenline[1].text}")
-
-    def __remove_labels(self, tokens):
-
-        label_address = {}
-
-        #Get address of each label
-        i = 0
-        while i < len(tokens):
-            if tokens[i][0].type == TokenType.LABEL:
-                if tokens[i][0].text not in label_address:
-                    label_address[tokens[i][0].text] = i
-                    tokens.pop(i)
-                    i -= 1
-                else:
-                    raise SyntaxError(f"Label: {tokens[i][0].text} has already been defined")
-            i += 1
-
-        #Replace variables with load addresses
-        for tokenline in tokens:
-            if tokenline[0].text == "load" and tokenline[1].type == TokenType.VARIABLE_IDENTFIER:
-                if tokenline[1].text in label_address:
-                    address = label_address[tokenline[1].text]
-                    tokenline[1] = Token(address, TokenType.INTEGER_LITERAL)
-
-    def __assemble_instructions(self, emulator, tokens):
-
-        for i in range(len(tokens)):
-            if tokens[i][0].type == TokenType.INTEGER_LITERAL:
-                emulator.set_value(i,tokens[i][0].text)
-            elif tokens[i][0].text == "load":
-                if tokens[i][1].type != TokenType.INTEGER_LITERAL:
-                    raise SyntaxError(f"load command expected Integer literal, recieved: {tokens[i][1].text}")
-                emulator.set_value(i,tokens[i][1].text)
+    def parse_line(self, emulator, tokenline, line_number, symbol_table):
+        if len(tokenline) == 0:
+            raise SyntaxError("Expected non-zero length tokenline")
+        if tokenline[0].type == TokenType.INTEGER_LITERAL:
+            emulator.set_value(line_number, tokenline[0].text)
+        elif tokenline[0].type == TokenType.SYMBOL:
+            symbol = tokenline[0].text
+            if symbol in symbol_table:
+                emulator.set_value(line_number, symbol_table[symbol])
             else:
-                emulator.set_value(i,self.__get_instruction(tokens[i]))
+                raise SyntaxError(f"Unrecognised Symbol: {symbol}")
+        elif tokenline[0].type == TokenType.INSTRUCTION:
+            value = self.parse_instruction(tokenline, symbol_table)
+            emulator.set_value(line_number, value)
+        else:
+            raise SyntaxError("Expected Integer or Instruction")
+
+    def parse_instruction(self, tokenline, symbol_table):
+        if tokenline[0].text == "load":
+            if tokenline[1].type == TokenType.INTEGER_LITERAL:
+                return tokenline[1].text
+            elif tokenline[1].type == TokenType.SYMBOL:
+                symbol = tokenline[1].text
+                if symbol in symbol_table:
+                    return symbol_table[symbol]
+                else:
+                    raise SyntaxError(f"Unrecognised Symbol: {symbol}")
+            else:
+                raise SyntaxError("Load arguement expected type Integer_literal or Symbol")
+        else:
+            return self.__get_instruction(tokenline)
+
 
     def __get_instruction(self, tokenline):
         if tokenline[1].text in ["A","M","P","S"]:
@@ -174,21 +119,3 @@ class Parser():
             operand = tokenline[1].text
 
         return self.__instructions[tokenline[0].text][operand]
-
-    def __replace_pop_push_instructions(self, tokens):
-        for tokenline in tokens:
-            if tokenline[0].text == "push":
-                tokenline[0] = Token("mov",TokenType.INSTRUCTION)
-                tokenline.insert(2, Token("s",TokenType.DESTINATION))
-            if tokenline[0].text == "pop":
-                tokenline[0] = Token("mov",TokenType.INSTRUCTION)
-                tokenline.insert(1, Token("s",TokenType.OPERAND))
-
-    def __get_num_of_codelines(self, tokens):
-        codelines_count = 0
-        for tokenline in tokens:
-            if tokenline[0].type in [TokenType.INSTRUCTION, TokenType.VARIABLE_IDENTFIER, TokenType.INTEGER_LITERAL]:
-                codelines_count += 1
-        return codelines_count
-
-
