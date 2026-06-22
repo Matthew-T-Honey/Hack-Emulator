@@ -44,6 +44,10 @@ class Parser():
                   "S" : 0b11}
         
     def parse_tokens(self, emulator, tokens, symbol_table):
+        for i in range(emulator.memory_size):
+            emulator.set_value(i,0)
+
+
         for i in range(len(tokens)):
             try:
                 self.parse_line(emulator, tokens[i], i, symbol_table)

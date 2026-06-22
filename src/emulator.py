@@ -29,6 +29,10 @@ class HackEmulator():
         return self.__datacells[cell].get_int()
     
     @property
+    def memory_size(self):
+        return self.__memory_locations
+    
+    @property
     def A_value(self):
         return self.__A_register.get_int()
     
@@ -46,6 +50,8 @@ class HackEmulator():
     
     @property
     def M_value(self):
+        if self.A_value >= self.memory_size:
+            return 0
         return self.get_value(self.A_value)
 
     @property
