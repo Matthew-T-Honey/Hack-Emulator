@@ -1,0 +1,26 @@
+.text
+loop:
+
+    load index
+    mov m A
+    mov -1 M
+
+    load kbd
+    mov a d
+    load index
+    inc m M
+    subl m D
+    load endloop
+    mov d ;jeq
+
+    load loop
+    mov 0 ;jmp
+
+
+.data
+index: SCREEN
+
+.text
+endloop:
+load endloop
+mov 0 ;jmp

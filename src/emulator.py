@@ -14,6 +14,15 @@ class HackEmulator():
         for i in range(self.__memory_locations):
             self.__datacells.append(DataCell())
 
+    def reset(self):
+        self.__D_register.set_int(0)
+        self.__A_register.set_int(0)
+        self.__P_register.set_int(self.__stack_base)
+        self.__PC_register.set_int(0)
+        for i in range(self.__memory_locations):
+            self.__datacells[i].set_int(0)
+
+
     def set_value(self, cell, value):
         if type(cell) != int:
             raise TypeError("set_value requires type int")
@@ -50,12 +59,14 @@ class HackEmulator():
     
     @property
     def M_value(self):
-        if self.A_value >= self.memory_size:
+        if self.A_value >= self.memory_size or self.A_value < 0:
             return 0
         return self.get_value(self.A_value)
 
     @property
     def S_value(self):
+        if self.P_value >= self.memory_size or self.P_value < 0:
+            return 0
         return self.get_value(self.P_value)
     
     def __set_M_value(self, value):

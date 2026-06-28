@@ -84,7 +84,7 @@ end_loop:
 
 
 .data
-test_value: 20082
+test_value: 4590
 bit1
 bit2
 index: 8

@@ -1,0 +1,173 @@
+.text
+
+outerloop:
+
+    mov 1 D
+    load xindex
+    and m D
+    load outerloopend
+    mov d ;jeq
+
+    mov 1 D
+    load yindex
+    and m D
+    load outerloopend
+    mov d ;jeq
+
+    
+    load xindex
+    mov m d
+    load xpix
+    mov d M
+
+    load yindex
+    mov m d
+    load ypix
+    mov d M
+
+    load pixval
+    mov 1 m
+
+
+    load outerloopend
+    mov a D
+    load setpixreturn
+    mov d m
+    load setpix
+    mov 0 ;jmp
+
+
+    outerloopend:
+    load width
+    mov m d
+    load xindex
+    inc m m
+    subl m D
+    load outerloop
+    mov d ;jne
+
+    load xindex
+    mov 0 M
+
+    load height
+    mov m d
+    load yindex
+    inc m m
+    subl m D
+    load outerloop
+    mov d ;jne
+
+    load end_loop
+    mov 0;jmp
+
+
+.data
+width:512
+height:256
+xindex:0
+yindex:0
+
+
+
+
+
+.data
+xpix
+ypix
+pixval
+location
+mask
+setpixreturn
+
+.text
+setpix:
+    load SCREEN
+    mov A D
+    load location
+    mov D M
+    yloop:
+        load ypix
+        mov M D
+        load yloopend
+        mov D ;jlt
+        load ypix
+        dec m M
+
+        load 32
+        mov A d
+        load location
+        add M m
+        load yloop
+        mov 0 ;jmp
+
+    yloopend:
+
+    xloop:
+        load xpix
+        mov M D
+        load 16
+        subl A D
+        load xloopend
+        mov D ;jlt
+
+        load 16
+        mov a d
+        load xpix
+        subr m m
+
+        load location
+        inc M M
+        load xloop
+        mov 0 ;jmp
+
+    xloopend:
+
+    load mask
+    mov 1 m
+
+    maskloop:
+        load xpix
+        mov M D
+        load maskloopend
+        mov D ;jeq
+        load xpix
+        dec m M
+
+        load mask
+        mov M d
+        add M M
+        load maskloop
+        mov 0;jmp
+
+    maskloopend:
+    
+    load pixval
+    mov m D
+    load set0
+    mov D ;jeq
+
+    set1:
+        load mask
+        mov m D
+        load location
+        mov m A
+        or m m
+        load setpixend
+        mov 0 ;jmp
+
+
+    set0:
+        load mask
+        not m D
+        load location
+        mov m A
+        and m m
+
+    setpixend:
+        load setpixreturn
+        mov m A ;jmp
+
+
+end_loop:
+    load end_loop
+    mov 0 ;jmp
