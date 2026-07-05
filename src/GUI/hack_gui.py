@@ -41,6 +41,7 @@ class HACK_GUI():
         self.ram_view.keyboard = self.keyboard
         self.token_view.ram_view = self.ram_view
         self.registers.ram_view = self.ram_view
+        self.registers.update()
         self.token_view.widget.verticalScrollBar().valueChanged.connect(self.ram_view.update_scrollbar)
         
 
