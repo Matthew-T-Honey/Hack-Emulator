@@ -1,0 +1,56 @@
+from PyQt6 import QtCore, QtGui, QtWidgets
+from src.GUI.components.keymapping import KeyMapping
+
+class Keyboard():
+    kbd_address = 24576
+    def __init__(self, gui, emualtor):
+        self.emulator = emualtor
+        self.widget = gui.ui.KBD_view
+        self.checkbox = gui.ui.KBD_checkbox
+        self.ram_view = gui.ram_view
+
+        self.held_key = 0
+
+        self.checkbox.stateChanged.connect(self.update)
+
+        gui.ui.actionKeyboard_View.triggered.connect(self.toggle_visible)
+
+
+    def key_pressed(self, key):
+        if KeyMapping.keyevent_to_int(key) != 0:
+            self.held_key = KeyMapping.keyevent_to_int(key)
+            self.update()
+
+    def key_released(self, key):
+        if KeyMapping.keyevent_to_int(key) != 0:
+            self.held_key = 0
+            self.update()
+
+    def update(self):
+        if self.held_key == 0 or not self.checkbox.isChecked():
+            self.widget.item(0,1).setText("")
+            self.emulator.set_value(self.kbd_address, 0)
+        else:
+            self.widget.item(0,1).setText(KeyMapping.special_char_to_string(self.held_key))
+            self.emulator.set_value(self.kbd_address, self.held_key)
+    
+        if self.ram_view.format == "Binary":
+            val_string = format(self.emulator.get_value(self.kbd_address) % 2**16,'016b')
+            val_string = val_string[:4]+" "+val_string[4:8]+" "+val_string[8:12]+" "+val_string[12:16]
+        elif self.ram_view.format == "Hexadecimal":
+            val_string = format(self.emulator.get_value(self.kbd_address) % 2**16,'04X')
+        elif self.ram_view.format == "Decimal":
+            val_string = str(self.emulator.get_value(self.kbd_address))
+        elif self.ram_view.format == "Assembly":
+            val_string = format(self.emulator.get_value(self.kbd_address) % 2**16,'016b')
+        else:
+            raise SyntaxError("No format: "+self.format)
+        self.widget.item(0,0).setText(val_string)
+        self.ram_view.update_RAM(self.kbd_address)
+
+    def toggle_visible(self):
+        self.widget.setVisible(not self.widget.isVisible())
+        self.checkbox.setVisible(self.widget.isVisible())
+        
+
+        

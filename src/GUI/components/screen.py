@@ -5,6 +5,9 @@ class Screen():
         self.emulator = emulator
         self.screen = QtWidgets.QGraphicsScene()
         self.widget = gui.ui.screen_view
+        self.size_button = gui.ui.screen_size_button
+
+        self.scale = 1
 
         self.widget.setScene(self.screen)
         self.image = QtGui.QImage(512,256, QtGui.QImage.Format.Format_Mono)
@@ -15,11 +18,26 @@ class Screen():
 
         self.update_timer = QtCore.QTimer()
         self.update_timer.timeout.connect(self.update_display)
-        self.update_timer.setInterval(10)
+        self.update_timer.setInterval(100)
         self.update_timer.start()
 
-        gui.ui.action_toggle_screen_view.triggered.connect(self.toggle_visible)
+        gui.ui.actionScreen_View.triggered.connect(self.toggle_visible)
 
+        self.size_button.clicked.connect(self.update_size)
+
+
+    def update_size(self):
+        if self.scale == 1:
+            self.scale = 2
+            self.size_button.setText("Small Screen")
+            self.widget.setFixedSize(1024,512)
+            self.widget.scale(2,2)
+        else:
+            self.scale = 1
+            self.size_button.setText("Large Screen")
+            self.widget.setFixedSize(512,256)
+            self.widget.scale(0.5,0.5)
+        self.update_screen()
 
 
     def update_screen(self):
@@ -54,5 +72,6 @@ class Screen():
 
     def toggle_visible(self):
         self.widget.setVisible(not self.widget.isVisible())
+        self.size_button.setVisible(self.widget.isVisible())
         
 

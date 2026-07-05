@@ -89,7 +89,7 @@ setpix:
         load ypix
         mov M D
         load yloopend
-        mov D ;jlt
+        mov D ;jle
         load ypix
         dec m M
 
@@ -108,7 +108,7 @@ setpix:
         load 16
         subl A D
         load xloopend
-        mov D ;jlt
+        mov D ;jle
 
         load 16
         mov a d

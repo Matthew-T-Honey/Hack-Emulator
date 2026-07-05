@@ -6,7 +6,7 @@ class Assembler():
     def assemble(self, emulator, input_file):
 
         lexer = Lexer()
-        tokens = lexer.lex_file(input_file)
+        tokens = lexer.lex_file(input_file.readlines())
         symbol_table = lexer.symbol_table
 
         parser = Parser()

@@ -9,7 +9,7 @@ def test_tmoats():
     emulator = HackEmulator()
     assembler = Assembler()
 
-    f = open("tests/test_files/tmoats.txt","r")
+    f = open("tests/test_files/tmoats.asm","r")
     assembler.assemble(emulator, f)
     f.close()
 

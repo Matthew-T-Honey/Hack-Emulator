@@ -2,6 +2,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from src.assembler_tools.tokentype import TokenType
 from src.assembler_tools.lexer import Lexer
 from src.assembler_tools.parser import Parser
+from src.GUI.components.error_box import ErrorBox
 
 class TokenView():
     def __init__(self, gui, emulator):
@@ -21,14 +22,25 @@ class TokenView():
                 item.setFlags(QtCore.Qt.ItemFlag.ItemIsDragEnabled|QtCore.Qt.ItemFlag.ItemIsDropEnabled|QtCore.Qt.ItemFlag.ItemIsUserCheckable|QtCore.Qt.ItemFlag.ItemIsEnabled)
                 self.widget.setItem(i, j, item)
 
-        self.widget.horizontalHeader().setStretchLastSection(True)
-        self.widget.horizontalHeader().setCascadingSectionResizes(True)
-
         self.parse_button.clicked.connect(self.parse_code)
 
         self.reset_token_view()
 
-        self.gui.ui.action_toggle_token_view.triggered.connect(self.toggle_visible)
+        gui.ui.actionToken_View.triggered.connect(self.toggle_visible)
+        gui.ui.actionLex_Code.triggered.connect(self.lex_code)
+        gui.ui.actionParse_Tokens.triggered.connect(self.parse_code)
+        gui.ui.actionAssemble_Code.triggered.connect(self.assemble_code)
+
+        self.widget.resizeColumnsToContents()
+
+        
+    def assemble_code(self):
+        if self.lex_code():
+            self.parse_code()
+
+    def update_scrollbar(self, value):
+        if value != self.widget.verticalScrollBar().value():
+            self.widget.verticalScrollBar().setValue(value)
 
 
     def set_token_view(self):
@@ -60,18 +72,20 @@ class TokenView():
 
 
     def lex_code(self):
-        code_file = open("src/GUI/codefile.txt","w")
-        self.gui.code_view.save_code_to_file(code_file)
-        code_file.close()
+        code = self.gui.code_view.get_code()
 
         self.lexer = Lexer()
-
-        code_file = open("src/GUI/codefile.txt","r")
-        self.lexer_tokens = self.lexer.lex_file(code_file)
-        code_file.close()
+        try:
+            self.lexer_tokens = self.lexer.lex_string(code)
+        except SyntaxError as e:
+            self.lexer_tokens = None
+            ErrorBox(str(e))
+            return False
 
         self.reset_token_view()
         self.set_token_view()
+
+        return True
 
     def parse_code(self):
         if self.lexer == None or self.lexer_tokens == None:
@@ -80,9 +94,16 @@ class TokenView():
         self.emulator.reset()
 
         parser = Parser()
-        parser.parse_tokens(self.emulator,self.lexer_tokens,self.lexer.symbol_table)
+        try:
+            parser.parse_tokens(self.emulator,self.lexer_tokens,self.lexer.symbol_table)
+        except SyntaxError as e:
+            self.gui.reset_emulator()
+            ErrorBox(str(e))
+            return False
 
         self.gui.ram_view.update_all_RAM()
+        
+        return True
 
     def toggle_visible(self):
         self.widget.setVisible(not self.widget.isVisible())
@@ -91,3 +112,6 @@ class TokenView():
             self.lex_assemble_button.setText("Lex")
         else:
             self.lex_assemble_button.setText("Assemble")
+
+
+    

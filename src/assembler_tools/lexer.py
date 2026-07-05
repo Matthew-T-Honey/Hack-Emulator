@@ -31,11 +31,11 @@ class Lexer():
     def symbol_table(self):
         return self.__symbol_table
 
-    def lex_file(self, file):
+    def lex_string(self, file_str):
         self.__section_type = None
 
         file_tokens = []
-        file_lines = file.readlines()
+        file_lines = file_str.split("\n")
         line_number = 0
 
         for i in range(len(file_lines)):
@@ -173,6 +173,8 @@ class Lexer():
             raise SyntaxError("Invalid label declaration")
         
         if self.__is_a_blocked_string(string_list[0]):
+            if string_list[0].lower() in self.symbol_table:
+                raise SyntaxError(f"Label name already used: {string_list[0]}")
             raise SyntaxError(f"Invalid label name: {string_list[0]}")
         
         self.symbol_table[string_list[0]] = line_number

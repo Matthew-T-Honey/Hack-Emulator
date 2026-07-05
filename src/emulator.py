@@ -13,6 +13,7 @@ class HackEmulator():
         self.__datacells = []
         for i in range(self.__memory_locations):
             self.__datacells.append(DataCell())
+        self.RAM_edit = None
 
     def reset(self):
         self.__D_register.set_int(0)
@@ -59,49 +60,42 @@ class HackEmulator():
     
     @property
     def M_value(self):
-        if self.A_value >= self.memory_size or self.A_value < 0:
+        if self.__A_register.get_int() >= self.__memory_locations or self.__A_register.get_int() < 0:
             return 0
-        return self.get_value(self.A_value)
+        return self.get_value(self.__A_register.get_int())
 
     @property
     def S_value(self):
-        if self.P_value >= self.memory_size or self.P_value < 0:
+        if self.__P_register.get_int() >= self.__memory_locations or self.__P_register.get_int() < 0:
             return 0
-        return self.get_value(self.P_value)
+        return self.get_value(self.__P_register.get_int())
     
     def __set_M_value(self, value):
-        self.set_value(self.A_value, value)
+        self.set_value(self.__A_register.get_int(), value)
 
     def __set_S_value(self, value):
-        self.set_value(self.P_value, value)
+        self.set_value(self.__P_register.get_int(), value)
 
-    def run_program(self, steps, debug = False, debug_ram_values = []):
+    def run_program(self, steps):
         for step in range(steps):
-            if debug:
-                print(f"\nPC: {self.PC_value}")
-                print(f"A: {self.A_value}")
-                print(f"M: {self.M_value}")
-                print(f"D: {self.D_value}")
-                print(f"P: {self.P_value}")
-                print(f"S: {self.S_value}")
-                print(f"Next Command: {self.__datacells[self.PC_value].get_bin()}")
-                for address in debug_ram_values:
-                   print(f"RAM[{address}]: {bin(self.get_value(address) % 2**16)}")
-                print(f"Stepcount: {step}")
             self.execute_next_command()
 
             
 
     def execute_next_command(self):
-        datacell = self.__datacells[self.PC_value]
+        if self.__PC_register.get_int() < 0 or self.__PC_register.get_int() >= self.__memory_locations:
+            raise ValueError("PC register value outside acceptable range")
+        self.RAM_edit = None
+        datacell = self.__datacells[self.__PC_register.get_int()]
         if datacell.get_bit(15) == 0:
             self.__A_command(datacell)
         else:
             self.__C_command(datacell)
+        return self.RAM_edit
 
     def __A_command(self, datacell):
         self.__A_register.set_int(datacell.get_int())
-        self.__PC_register.set_int(self.PC_value + 1)
+        self.__PC_register.set_int(self.__PC_register.get_int() + 1)
 
     def __C_command(self, datacell):
         #Using C Command: 10cc cccc aadd djjj
@@ -111,24 +105,22 @@ class HackEmulator():
         self.__compute_jump(datacell, result)
 
     def __get_operand(self, datacell):
-        a1 = datacell.get_bit(6)
-        a2 = datacell.get_bit(7)
+        operand_condition = 2*datacell.get_bit(7) + datacell.get_bit(6)
 
-        if a2 == 0 and a1 == 0:
-            return self.A_value
-        elif a2 == 0 and a1 == 1:
+        if operand_condition == 0:
+            return self.__A_register.get_int()
+        if operand_condition == 1:
             return self.M_value
-        elif a2 == 1 and a1 == 0:
-            return self.P_value
-        elif a2 == 1 and a1 == 1:
-            self.__P_register.set_int(self.P_value + 1)
+        if operand_condition == 2:
+            return self.__P_register.get_int()
+        if operand_condition == 3:
+            self.__P_register.set_int(self.__P_register.get_int() + 1)
             return self.S_value
-        else:
-            raise ValueError("Datacell bit error")
+        raise ValueError("Datacell bit error")
 
     def __compute_result(self, datacell, operand):
         first_operand = operand
-        second_operand = self.D_value
+        second_operand = self.__D_register.get_int()
         if datacell.get_bit(13) == 1:
             second_operand = 0
 
@@ -160,12 +152,14 @@ class HackEmulator():
             self.__A_register.set_int(result)
         elif store_condition == 3:
             self.__set_M_value(result)
+            self.RAM_edit = self.__A_register.get_int()
         elif store_condition == 4:
             self.__P_register.set_int(result)
         elif store_condition == 5:
             self.__set_S_value(result)
-            self.__P_register.set_int(self.P_value - 1)
-            if self.P_value > self.__stack_base:
+            self.RAM_edit = self.__P_register.get_int()
+            self.__P_register.set_int(self.__P_register.get_int() - 1)
+            if self.__P_register.get_int() > self.__stack_base:
                 raise MemoryError("Stack has underflown")
 
     def __compute_jump(self, datacell, result):
@@ -179,9 +173,10 @@ class HackEmulator():
             (jump_condition == 6 and result <= 0) or 
             (jump_condition == 7)):
             self.__jump()
+
         else:
-            self.__PC_register.set_int(self.PC_value + 1)
+            self.__PC_register.set_int(self.__PC_register.get_int() + 1)
     
     def __jump(self):
-        self.__PC_register.set_int(self.A_value)
+        self.__PC_register.set_int(self.__A_register.get_int())
 
