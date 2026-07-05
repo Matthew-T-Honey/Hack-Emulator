@@ -36,7 +36,6 @@ class Registers():
         else:
             raise SyntaxError("No format: "+self.ram_view.format)
         register.item(0,0).setText(val_string)
-        register.resizeColumnsToContents()
 
     def toggle_visible(self):
         self.PC_register.setVisible(not self.PC_register.isVisible())
