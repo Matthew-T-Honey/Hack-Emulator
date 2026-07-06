@@ -72,12 +72,17 @@ class RamView():
         for i in range(self.emulator.memory_size):
             item = QtWidgets.QTableWidgetItem()
             item.setFlags(QtCore.Qt.ItemFlag.ItemIsDragEnabled|QtCore.Qt.ItemFlag.ItemIsDropEnabled|QtCore.Qt.ItemFlag.ItemIsUserCheckable|QtCore.Qt.ItemFlag.ItemIsEnabled)
+            item.setCheckState(QtCore.Qt.CheckState.Unchecked)
             self.widget.setItem(i, 0, item)
+
+            item = QtWidgets.QTableWidgetItem()
+            item.setFlags(QtCore.Qt.ItemFlag.ItemIsDragEnabled|QtCore.Qt.ItemFlag.ItemIsDropEnabled|QtCore.Qt.ItemFlag.ItemIsUserCheckable|QtCore.Qt.ItemFlag.ItemIsEnabled)
+            self.widget.setItem(i, 1, item)
             item.setText(str(i))
 
             item = QtWidgets.QTableWidgetItem()
             item.setFlags(QtCore.Qt.ItemFlag.ItemIsEditable|QtCore.Qt.ItemFlag.ItemIsDragEnabled|QtCore.Qt.ItemFlag.ItemIsDropEnabled|QtCore.Qt.ItemFlag.ItemIsUserCheckable|QtCore.Qt.ItemFlag.ItemIsEnabled)
-            self.widget.setItem(i, 1, item)
+            self.widget.setItem(i, 2, item)
 
         
         self.update_all_RAM()
@@ -93,7 +98,11 @@ class RamView():
 
         gui.ui.actionRAM_View.triggered.connect(self.toggle_visible)
 
-        
+
+    def is_breakpoint(self,address):
+        if address < 0 or address >= self.emulator.memory_size:
+            return QtCore.Qt.CheckState.Unchecked
+        return self.widget.item(address,0).checkState() == QtCore.Qt.CheckState.Checked
 
 
     def update_scrollbar(self, value):
@@ -106,7 +115,7 @@ class RamView():
             return
         if item != self.widget.currentItem():
             return
-        if item.column() != 1:
+        if item.column() != 2:
             return
         new_text = item.text()
         
@@ -133,6 +142,8 @@ class RamView():
         self.update_RAM(item.row())
         
     def track_item(self, item):
+        if item.column() == 0:
+            return
         if item.row() == self.emulator.PC_value:
             self.tracking = "PC"
         elif item.row() == self.emulator.A_value:
@@ -178,7 +189,8 @@ class RamView():
 
         self.widget.item(i, 0).setBackground(color)
         self.widget.item(i, 1).setBackground(color)
-        self.widget.item(i, 0).setText(str(i) + address_str_addition)
+        self.widget.item(i, 2).setBackground(color)
+        self.widget.item(i, 1).setText(str(i) + address_str_addition)
         if self.format == "Binary":
             val_string = format(self.emulator.get_value(i) % 2**16,'016b')
             val_string = val_string[:4]+" "+val_string[4:8]+" "+val_string[8:12]+" "+val_string[12:16]
@@ -190,7 +202,7 @@ class RamView():
             val_string = self.bin_to_asm(self.emulator.get_value(i))
         else:
             raise SyntaxError("No format: "+self.format)
-        self.widget.item(i, 1).setText(val_string)
+        self.widget.item(i, 2).setText(val_string)
         
 
     def format_changed(self, format):

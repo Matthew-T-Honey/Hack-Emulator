@@ -79,6 +79,8 @@ class MainWindow(QtWidgets.QMainWindow):
             if event.type() == QtCore.QEvent.Type.KeyRelease:
                 if not event.isAutoRepeat():
                     self.gui.keyboard.key_released(event)
+        if event.type() == QtCore.QEvent.Type.Wheel:
+            self.gui.ram_view.tracking = None
         return False
 
 

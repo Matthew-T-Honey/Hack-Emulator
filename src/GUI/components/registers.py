@@ -12,6 +12,11 @@ class Registers():
 
         gui.ui.actionRegister_View.triggered.connect(self.toggle_visible)
 
+        self.PC_register.itemClicked.connect(self.track_PC)
+        self.A_register.itemClicked.connect(self.track_A)
+        self.M_register.itemClicked.connect(self.track_A)
+        self.P_register.itemClicked.connect(self.track_P)
+        self.S_register.itemClicked.connect(self.track_P)
 
     def update(self):
         self.update_one(self.PC_register,self.emulator.PC_value)
@@ -45,3 +50,15 @@ class Registers():
         self.P_register.setVisible(not self.P_register.isVisible())
         self.S_register.setVisible(not self.S_register.isVisible())
         
+
+    def track_PC(self):
+        self.ram_view.tracking = "PC"
+        self.ram_view.scroll_to_item()
+
+    def track_A(self):
+        self.ram_view.tracking = "A"
+        self.ram_view.scroll_to_item()
+
+    def track_P(self):
+        self.ram_view.tracking = "P"
+        self.ram_view.scroll_to_item()

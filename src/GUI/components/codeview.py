@@ -18,7 +18,6 @@ class CodeView():
 
         gui.ui.actionCode_View.triggered.connect(self.toggle_visible)
 
-        
 
     def load_file(self):
 

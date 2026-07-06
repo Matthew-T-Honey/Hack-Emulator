@@ -83,14 +83,18 @@ class HackEmulator():
             
 
     def execute_next_command(self):
-        if self.__PC_register.get_int() < 0 or self.__PC_register.get_int() >= self.__memory_locations:
-            raise ValueError("PC register value outside acceptable range")
         self.RAM_edit = None
         datacell = self.__datacells[self.__PC_register.get_int()]
         if datacell.get_bit(15) == 0:
             self.__A_command(datacell)
         else:
             self.__C_command(datacell)
+        if self.__PC_register.get_int() < 0:
+            self.__PC_register.set_int(0)
+            raise ValueError("PC register value outside acceptable range")
+        if self.__PC_register.get_int() >= self.__memory_locations:
+            self.__PC_register.set_int(self.__memory_locations-1)
+            raise ValueError("PC register value outside acceptable range")
         return self.RAM_edit
 
     def __A_command(self, datacell):

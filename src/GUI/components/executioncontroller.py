@@ -38,6 +38,8 @@ class ExecutionController():
         self.A_previous = self.emulator.A_value
         self.P_previous = self.emulator.P_value
         self.PC_previous = self.emulator.PC_value
+
+        self.stopping = False
         
         for i in range(self.batch_size):
             try:
@@ -45,10 +47,11 @@ class ExecutionController():
                 if RAM_change != None:
                     RAM_changes.append(RAM_change)
             except ValueError as e:
-                self.stop_code()
-                
-                if self.emulator.PC_value != self.emulator.memory_size:
-                    ErrorBox(str(e))
+                self.stopping = True
+                ErrorBox(str(e))
+                break
+            if self.ram_view.is_breakpoint(self.emulator.PC_value):
+                self.stopping = True
                 break
                    
         for change in RAM_changes:
@@ -71,6 +74,9 @@ class ExecutionController():
             self.speed_control.update_label(self.batch_size/(time.time()-self.time_since_last_batch))
 
         self.time_since_last_batch=time.time()
+
+        if self.stopping:
+            self.stop_code()
 
     def update_RAM(self, change):
         self.ram_view.update_RAM(change)
@@ -117,8 +123,9 @@ class ExecutionController():
         self.run_button.setText("Run")
         self.runtime_timer.stop()
         self.running = False
-        self.ram_view.update_all_RAM()
-        self.registers.update()
+        #self.ram_view.update_all_RAM()
+        #self.screen.update_screen()
+        #self.registers.update()
         for i in range(self.emulator.memory_size):
             self.ram_view.widget.item(i,1).setFlags(QtCore.Qt.ItemFlag.ItemIsEditable|QtCore.Qt.ItemFlag.ItemIsDragEnabled|QtCore.Qt.ItemFlag.ItemIsDropEnabled|QtCore.Qt.ItemFlag.ItemIsUserCheckable|QtCore.Qt.ItemFlag.ItemIsEnabled)
 

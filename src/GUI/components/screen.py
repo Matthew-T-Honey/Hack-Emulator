@@ -18,7 +18,7 @@ class Screen():
 
         self.update_timer = QtCore.QTimer()
         self.update_timer.timeout.connect(self.update_display)
-        self.update_timer.setInterval(100)
+        self.update_timer.setInterval(10)
         self.update_timer.start()
 
         gui.ui.actionScreen_View.triggered.connect(self.toggle_visible)
