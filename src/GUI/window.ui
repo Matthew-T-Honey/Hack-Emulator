@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1564</width>
-    <height>1005</height>
+    <width>1588</width>
+    <height>998</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -25143,7 +25143,7 @@
         </column>
         <column>
          <property name="text">
-          <string>Line</string>
+          <string>Line   </string>
          </property>
         </column>
         <column>
@@ -50212,7 +50212,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1564</width>
+     <width>1588</width>
      <height>22</height>
     </rect>
    </property>
@@ -50254,10 +50254,17 @@
     <addaction name="actionScreen_View"/>
     <addaction name="actionKeyboard_View"/>
    </widget>
+   <widget class="QMenu" name="menuStack">
+    <property name="title">
+     <string>Stack</string>
+    </property>
+    <addaction name="actionToggle_Stack_View"/>
+   </widget>
    <addaction name="menuFIle"/>
    <addaction name="menuAssembler"/>
    <addaction name="menuRun"/>
    <addaction name="menuToggle_Views"/>
+   <addaction name="menuStack"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionLoad">
@@ -50333,6 +50340,11 @@
   <action name="actionRAM_View">
    <property name="text">
     <string>RAM_View</string>
+   </property>
+  </action>
+  <action name="actionToggle_Stack_View">
+   <property name="text">
+    <string>Toggle Stack View</string>
    </property>
   </action>
  </widget>

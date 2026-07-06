@@ -58,6 +58,8 @@ class RamView():
         self.format_dropdown = gui.ui.format_dropdown
         self.tracking = None
 
+        self.stack_view = True
+
         self.format = self.format_dropdown.currentText()
         
         self.reset_button = gui.ui.reset_button
@@ -98,6 +100,14 @@ class RamView():
 
         gui.ui.actionRAM_View.triggered.connect(self.toggle_visible)
 
+        gui.ui.actionToggle_Stack_View.triggered.connect(self.toggle_stack_view)
+
+
+    def toggle_stack_view(self):
+        self.stack_view = not self.stack_view
+        if self.tracking == "P":
+            self.tracking = None
+        self.update_RAM(self.emulator.P_value)
 
     def is_breakpoint(self,address):
         if address < 0 or address >= self.emulator.memory_size:
@@ -175,14 +185,16 @@ class RamView():
     def update_RAM(self,i):
         if i < 0 or i >= self.emulator.memory_size:
             return
-        if i in [self.emulator.A_value, self.emulator.P_value, self.emulator.PC_value]:
+        if i in [self.emulator.A_value, self.emulator.PC_value]:
+            color = QtGui.QColor(255,255,100)
+        elif i == self.emulator.P_value and self.stack_view:
             color = QtGui.QColor(255,255,100)
         else:
             color = QtGui.QColor(255,255,255)
         address_str_addition = ""
         if i == self.emulator.A_value:
             address_str_addition += " (A)"
-        if i == self.emulator.P_value:
+        if i == self.emulator.P_value and self.stack_view:
             address_str_addition += " (P)"
         if i == self.emulator.PC_value:
             address_str_addition += " (PC)"

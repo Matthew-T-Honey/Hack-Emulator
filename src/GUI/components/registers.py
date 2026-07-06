@@ -11,6 +11,9 @@ class Registers():
         self.emulator = emulator
 
         gui.ui.actionRegister_View.triggered.connect(self.toggle_visible)
+        gui.ui.actionToggle_Stack_View.triggered.connect(self.toggle_stack_view)
+
+        self.stack_view = True
 
         self.PC_register.itemClicked.connect(self.track_PC)
         self.A_register.itemClicked.connect(self.track_A)
@@ -47,9 +50,13 @@ class Registers():
         self.D_register.setVisible(not self.D_register.isVisible())
         self.A_register.setVisible(not self.A_register.isVisible())
         self.M_register.setVisible(not self.M_register.isVisible())
-        self.P_register.setVisible(not self.P_register.isVisible())
-        self.S_register.setVisible(not self.S_register.isVisible())
+        self.P_register.setVisible(not self.P_register.isVisible() and self.stack_view)
+        self.S_register.setVisible(not self.S_register.isVisible() and self.stack_view)
         
+    def toggle_stack_view(self):
+        self.stack_view = not self.stack_view
+        self.P_register.setVisible(self.PC_register.isVisible() and self.stack_view)
+        self.S_register.setVisible(self.PC_register.isVisible() and self.stack_view)
 
     def track_PC(self):
         self.ram_view.tracking = "PC"
