@@ -44,7 +44,7 @@ class ExecutionController():
         for i in range(self.batch_size):
             try:
                 RAM_change = self.emulator.execute_next_command()
-                if RAM_change != None:
+                if RAM_change != None and RAM_change not in RAM_changes:
                     RAM_changes.append(RAM_change)
             except ValueError as e:
                 self.stopping = True
