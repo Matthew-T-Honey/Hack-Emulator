@@ -9,7 +9,7 @@ class Keyboard():
         self.checkbox = gui.ui.KBD_checkbox
         self.ram_view = gui.ram_view
 
-        self.held_key = 0
+        self.held_keys = []
 
         self.checkbox.stateChanged.connect(self.update)
 
@@ -17,22 +17,24 @@ class Keyboard():
 
 
     def key_pressed(self, key):
-        if KeyMapping.keyevent_to_int(key) != 0:
-            self.held_key = KeyMapping.keyevent_to_int(key)
+        key_int = KeyMapping.keyevent_to_int(key)
+        if key_int != 0 and key_int not in self.held_keys:
+            self.held_keys.insert(0,key_int)
             self.update()
 
     def key_released(self, key):
-        if KeyMapping.keyevent_to_int(key) != 0:
-            self.held_key = 0
+        key_int = KeyMapping.keyevent_to_int(key)
+        if key_int != 0 and key_int in self.held_keys:
+            self.held_keys.remove(key_int)
             self.update()
 
     def update(self):
-        if self.held_key == 0 or not self.checkbox.isChecked():
+        if len(self.held_keys) == 0 or not self.checkbox.isChecked():
             self.widget.item(0,1).setText("")
             self.emulator.set_value(self.kbd_address, 0)
         else:
-            self.widget.item(0,1).setText(KeyMapping.special_char_to_string(self.held_key))
-            self.emulator.set_value(self.kbd_address, self.held_key)
+            self.widget.item(0,1).setText(KeyMapping.special_char_to_string(self.held_keys[0]))
+            self.emulator.set_value(self.kbd_address, self.held_keys[0])
     
         if self.ram_view.format == "Binary":
             val_string = format(self.emulator.get_value(self.kbd_address) % 2**16,'016b')

@@ -6,6 +6,8 @@ class CodeView():
         self.token_view = gui.token_view
         self.load_button = gui.ui.load_button
         self.save_button = gui.ui.save_button
+        self.line_numbers = gui.ui.code_line_numbers
+
 
         self.lex_assemble_button = gui.ui.lex_assemble_button
         self.lex_assemble_button.clicked.connect(self.lex_or_assemble_code)
@@ -18,6 +20,28 @@ class CodeView():
 
         gui.ui.actionCode_View.triggered.connect(self.toggle_visible)
 
+        self.set_num_of_lines()
+
+        self.line_numbers.verticalScrollBar().valueChanged.connect(self.scroll_line_numbers)
+        self.widget.verticalScrollBar().valueChanged.connect(self.scroll_code)
+
+        self.widget.textChanged.connect(self.set_num_of_lines)
+
+    def set_num_of_lines(self):
+        num = self.widget.toPlainText().count("\n")
+        lines = ""
+        for i in range(num+1):
+            lines += str(i+1)+".\n"
+        lines = lines[:-1]
+
+        self.line_numbers.setPlainText(lines)
+
+    def scroll_line_numbers(self, value):
+        self.widget.verticalScrollBar().setValue(value)
+        self.line_numbers.verticalScrollBar().setValue(self.widget.verticalScrollBar().value())
+
+    def scroll_code(self, value):
+        self.line_numbers.verticalScrollBar().setValue(value)
 
     def load_file(self):
 

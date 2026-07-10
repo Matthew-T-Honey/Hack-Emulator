@@ -57,8 +57,6 @@ class ExecutionController():
         for change in RAM_changes:
             self.ram_view.update_RAM(change)
 
-            self.screen.update_value(change)
-
         self.ram_view.update_RAM(self.A_previous)
         self.ram_view.update_RAM(self.P_previous)
         self.ram_view.update_RAM(self.PC_previous)

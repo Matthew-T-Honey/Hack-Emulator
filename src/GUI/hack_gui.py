@@ -34,8 +34,9 @@ class HACK_GUI():
         self.code_view = CodeView(self)
         self.speed_control = SpeedControl(self)
         self.registers = Registers(self, self.emulator)
-        self.ram_view = RamView(self, self.emulator)
         self.screen = Screen(self, self.emulator)
+        self.ram_view = RamView(self, self.emulator)
+        
         self.keyboard = Keyboard(self, self.emulator)
 
         self.ram_view.keyboard = self.keyboard
@@ -49,6 +50,7 @@ class HACK_GUI():
     
         self.ui.reset_button.clicked.connect(self.reset_emulator)
         self.ui.actionReset.triggered.connect(self.reset_emulator)
+        self.ram_view.update_all_RAM()
 
         QtWidgets.QApplication.instance().installEventFilter(self.window)
 
@@ -59,10 +61,8 @@ class HACK_GUI():
 
     def reset_emulator(self):
         self.execution_controller.stop_code()
-        self.emulator.reset()
-        self.ram_view.update_all_RAM()
-        self.registers.update()
-        self.screen.update_screen()
+        self.token_view.parse_code()
+
     
     
         

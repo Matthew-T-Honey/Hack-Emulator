@@ -58,6 +58,8 @@ class RamView():
         self.format_dropdown = gui.ui.format_dropdown
         self.tracking = None
 
+        self.screen = gui.screen
+
         self.stack_view = True
 
         self.format = self.format_dropdown.currentText()
@@ -67,9 +69,8 @@ class RamView():
         self.run_button = gui.ui.run_button
         self.emulator = emulator
         self.speed_control = gui.speed_control
+        self.RAM_search = gui.ui.RAM_search
         self.registers = gui.registers
-        
-        
 
         for i in range(self.emulator.memory_size):
             item = QtWidgets.QTableWidgetItem()
@@ -87,21 +88,34 @@ class RamView():
             self.widget.setItem(i, 2, item)
 
         
-        self.update_all_RAM()
+        #self.update_all_RAM()
         self.widget.resizeColumnsToContents()
 
         self.format_dropdown.currentTextChanged.connect(self.format_changed)
 
-        
         self.widget.itemClicked.connect(self.track_item)
         self.widget.itemChanged.connect(self.update_item)
         self.token_view = gui.token_view
         self.widget.verticalScrollBar().valueChanged.connect(self.token_view.update_scrollbar)
 
+        self.RAM_search.returnPressed.connect(self.search_RAM)
+
         gui.ui.actionRAM_View.triggered.connect(self.toggle_visible)
 
         gui.ui.actionToggle_Stack_View.triggered.connect(self.toggle_stack_view)
+        
 
+    def search_RAM(self):
+        self.tracking = None
+        search_text = self.RAM_search.text()
+        try:
+            address = int(search_text)
+        except:
+            return
+        if address < 0 or address >= self.emulator.memory_size:
+            return
+        self.widget.scrollToItem(self.widget.item(address, 0),QtWidgets.QAbstractItemView.ScrollHint.PositionAtCenter)
+        
 
     def toggle_stack_view(self):
         self.stack_view = not self.stack_view
@@ -181,6 +195,8 @@ class RamView():
             self.update_RAM(i)
 
         self.scroll_to_item()
+        self.screen.update_screen()
+        self.registers.update()
 
     def update_RAM(self,i):
         if i < 0 or i >= self.emulator.memory_size:
@@ -215,6 +231,8 @@ class RamView():
         else:
             raise SyntaxError("No format: "+self.format)
         self.widget.item(i, 2).setText(val_string)
+
+        self.screen.update_value(i)
         
 
     def format_changed(self, format):
@@ -295,6 +313,7 @@ class RamView():
         self.run_button.setVisible(self.widget.isVisible())
         self.speed_control.widget.setVisible(self.widget.isVisible())
         self.format_dropdown.setVisible(self.widget.isVisible())
+        self.RAM_search.setVisible(self.widget.isVisible())
 
 
 
