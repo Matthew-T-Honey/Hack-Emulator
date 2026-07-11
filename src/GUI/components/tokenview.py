@@ -97,7 +97,7 @@ class TokenView():
         try:
             parser.parse_tokens(self.emulator,self.lexer_tokens,self.lexer.symbol_table)
         except SyntaxError as e:
-            self.gui.reset_emulator()
+            self.emulator.reset()
             ErrorBox(str(e))
             return False
 
