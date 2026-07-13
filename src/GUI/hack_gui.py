@@ -47,6 +47,7 @@ class HACK_GUI():
         
 
         self.execution_controller = ExecutionController(self, self.emulator)
+        self.token_view.execution_controller = self.execution_controller
     
         self.ui.reset_button.clicked.connect(self.reset_emulator)
         self.ui.actionReset.triggered.connect(self.reset_emulator)
@@ -54,13 +55,14 @@ class HACK_GUI():
 
         QtWidgets.QApplication.instance().installEventFilter(self.window)
 
+        self.app.styleHints().setColorScheme(QtCore.Qt.ColorScheme.Light)
+
     def open_window(self):
         self.window.show()
 
         sys.exit(self.app.exec())
 
     def reset_emulator(self):
-        self.execution_controller.stop_code()
         self.token_view.parse_code()
 
     

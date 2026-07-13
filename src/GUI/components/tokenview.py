@@ -88,10 +88,12 @@ class TokenView():
         return True
 
     def parse_code(self):
-        if self.lexer == None or self.lexer_tokens == None:
-            return
-        
+        self.execution_controller.stop_code()
         self.emulator.reset()
+
+        if self.lexer == None or self.lexer_tokens == None:
+            self.gui.ram_view.update_all_RAM()
+            return
 
         parser = Parser()
         try:
