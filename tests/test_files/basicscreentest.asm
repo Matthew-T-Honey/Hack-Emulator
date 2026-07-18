@@ -44,8 +44,3 @@ loop2:
 
 .data
 index: SCREEN
-
-.text
-endloop:
-load endloop
-mov 0 ;jmp

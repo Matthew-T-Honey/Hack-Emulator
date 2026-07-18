@@ -43,7 +43,7 @@ class Lexer():
             try:
                 line_tokens = self.lex_line(line, line_number)
             except SyntaxError as e:
-                raise SyntaxError(f"Syntax error on line {i+1}: "+str(e))
+                raise SyntaxError(f"Lexing error on line {i+1}:\n"+str(e))
             if line_tokens != []:
                 file_tokens.append(line_tokens)
                 line_number += 1

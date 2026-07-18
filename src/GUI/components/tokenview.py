@@ -9,20 +9,17 @@ class TokenView():
         self.gui = gui
         self.emulator = emulator
         self.widget = gui.ui.token_view
-        self.lexer_tokens = None
-        self.lexer = None
-
-
         self.lex_assemble_button = gui.ui.lex_assemble_button
         self.parse_button = gui.ui.parse_button
+
+        self.lexer_tokens = None
+        self.lexer = None
 
         for i in range(self.emulator.memory_size):
             for j in range(6):
                 item = QtWidgets.QTableWidgetItem()
                 item.setFlags(QtCore.Qt.ItemFlag.ItemIsDragEnabled|QtCore.Qt.ItemFlag.ItemIsDropEnabled|QtCore.Qt.ItemFlag.ItemIsUserCheckable|QtCore.Qt.ItemFlag.ItemIsEnabled)
                 self.widget.setItem(i, j, item)
-
-        self.parse_button.clicked.connect(self.parse_code)
 
         self.reset_token_view()
 
@@ -31,7 +28,10 @@ class TokenView():
         gui.ui.actionParse_Tokens.triggered.connect(self.parse_code)
         gui.ui.actionAssemble_Code.triggered.connect(self.assemble_code)
 
-        self.widget.resizeColumnsToContents()
+        self.parse_button.clicked.connect(self.parse_code)
+
+        self.widget.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Fixed)
+        self.widget.horizontalHeader().setMaximumSectionSize(150)
 
         
     def assemble_code(self):
@@ -56,8 +56,8 @@ class TokenView():
 
         for symbol in self.lexer.symbol_table:
             self.widget.item(self.lexer.symbol_table[symbol], 0).setText(symbol+":")
-
         self.widget.resizeColumnsToContents()
+
 
     def reset_token_view(self):
         for i in range(self.emulator.memory_size):
@@ -66,9 +66,9 @@ class TokenView():
                     self.widget.item(i,j).setText(str(i))
                 else:
                     self.widget.item(i,j).setText("")
+        self.widget.resizeColumnsToContents()
 
         
-        self.widget.resizeColumnsToContents()
 
 
     def lex_code(self):
@@ -88,7 +88,7 @@ class TokenView():
         return True
 
     def parse_code(self):
-        self.execution_controller.stop_code()
+        self.gui.execution_controller.stop_code()
         self.emulator.reset()
 
         if self.lexer == None or self.lexer_tokens == None:

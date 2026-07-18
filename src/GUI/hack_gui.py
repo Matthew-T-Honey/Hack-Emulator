@@ -36,19 +36,15 @@ class HACK_GUI():
         self.registers = Registers(self, self.emulator)
         self.screen = Screen(self, self.emulator)
         self.ram_view = RamView(self, self.emulator)
-        
         self.keyboard = Keyboard(self, self.emulator)
-
-        self.ram_view.keyboard = self.keyboard
-        self.token_view.ram_view = self.ram_view
-        self.registers.ram_view = self.ram_view
-        self.registers.update()
-        self.token_view.widget.verticalScrollBar().valueChanged.connect(self.ram_view.update_scrollbar)
-        
-
         self.execution_controller = ExecutionController(self, self.emulator)
-        self.token_view.execution_controller = self.execution_controller
-    
+
+
+        self.ram_view.update_all_RAM()
+        self.ram_view.widget.resizeColumnsToContents()
+        self.token_view.widget.verticalScrollBar().valueChanged.connect(self.ram_view.update_scrollbar)
+
+
         self.ui.reset_button.clicked.connect(self.reset_emulator)
         self.ui.actionReset.triggered.connect(self.reset_emulator)
         self.ram_view.update_all_RAM()

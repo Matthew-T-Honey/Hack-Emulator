@@ -2,6 +2,7 @@
 
 class Registers():
     def __init__(self, gui, emulator):
+        self.gui = gui
         self.PC_register = gui.ui.PC_register
         self.D_register = gui.ui.D_register
         self.A_register = gui.ui.A_register
@@ -31,18 +32,18 @@ class Registers():
 
 
     def update_one(self,register,value):
-        if self.ram_view.format == "Binary":
+        if self.gui.ram_view.format == "Binary":
             val_string = format(value % 2**16,'016b')
             val_string = val_string[:4]+" "+val_string[4:8]+" "+val_string[8:12]+" "+val_string[12:16]
-        elif self.ram_view.format == "Hexadecimal":
+        elif self.gui.ram_view.format == "Hexadecimal":
             val_string = format(value % 2**16,'04X')
-        elif self.ram_view.format == "Decimal":
+        elif self.gui.ram_view.format == "Decimal":
             val_string = str(value)
-        elif self.ram_view.format == "Assembly":
+        elif self.gui.ram_view.format == "Assembly":
             val_string = format(value % 2**16,'016b')
             val_string = val_string[:4]+" "+val_string[4:8]+" "+val_string[8:12]+" "+val_string[12:16]
         else:
-            raise SyntaxError("No format: "+self.ram_view.format)
+            raise SyntaxError("No format: "+self.gui.ram_view.format)
         register.item(0,0).setText(val_string)
 
     def toggle_visible(self):

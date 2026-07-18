@@ -52,7 +52,7 @@ class Parser():
             try:
                 self.parse_line(emulator, tokens[i], i, symbol_table)
             except SyntaxError as e:
-                raise SyntaxError(f"Syntax error on line {i+1}: "+str(e))
+                raise SyntaxError(f"Parsing error at address {i+1}:\n"+str(e))
 
     def parse_line(self, emulator, tokenline, line_number, symbol_table):
         if len(tokenline) == 0:

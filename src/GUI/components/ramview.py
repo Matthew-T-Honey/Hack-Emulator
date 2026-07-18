@@ -53,24 +53,19 @@ class RamView():
 
     def __init__(self, gui, emulator):
         self.gui = gui
-
         self.widget = gui.ui.RAM_view
         self.format_dropdown = gui.ui.format_dropdown
-        self.tracking = None
-
-        self.screen = gui.screen
-
-        self.stack_view = True
-
-        self.format = self.format_dropdown.currentText()
-        
         self.reset_button = gui.ui.reset_button
         self.step_button = gui.ui.step_button
         self.run_button = gui.ui.run_button
         self.emulator = emulator
         self.speed_control = gui.speed_control
         self.RAM_search = gui.ui.RAM_search
-        self.registers = gui.registers
+
+        self.tracking = None
+        self.stack_view = True
+
+        self.format = self.format_dropdown.currentText()
 
         for i in range(self.emulator.memory_size):
             item = QtWidgets.QTableWidgetItem()
@@ -87,34 +82,24 @@ class RamView():
             item.setFlags(QtCore.Qt.ItemFlag.ItemIsEditable|QtCore.Qt.ItemFlag.ItemIsDragEnabled|QtCore.Qt.ItemFlag.ItemIsDropEnabled|QtCore.Qt.ItemFlag.ItemIsUserCheckable|QtCore.Qt.ItemFlag.ItemIsEnabled)
             self.widget.setItem(i, 2, item)
 
-        
-        #self.update_all_RAM()
-        self.widget.resizeColumnsToContents()
-
         self.format_dropdown.currentTextChanged.connect(self.format_changed)
-
         self.widget.itemClicked.connect(self.track_item)
         self.widget.itemChanged.connect(self.update_item)
-        self.token_view = gui.token_view
-        self.widget.verticalScrollBar().valueChanged.connect(self.token_view.update_scrollbar)
-
+        self.widget.verticalScrollBar().valueChanged.connect(self.gui.token_view.update_scrollbar)
         self.RAM_search.returnPressed.connect(self.search_RAM)
-
         gui.ui.actionRAM_View.triggered.connect(self.toggle_visible)
-
         gui.ui.actionToggle_Stack_View.triggered.connect(self.toggle_stack_view)
+
+        self.widget.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Fixed)
         
 
     def search_RAM(self):
-        self.tracking = None
         search_text = self.RAM_search.text()
         try:
             address = int(search_text)
         except:
             return
-        if address < 0 or address >= self.emulator.memory_size:
-            return
-        self.widget.scrollToItem(self.widget.item(address, 0),QtWidgets.QAbstractItemView.ScrollHint.PositionAtCenter)
+        self.go_to_item(address)
         
 
     def toggle_stack_view(self):
@@ -176,9 +161,15 @@ class RamView():
             self.tracking = "P"
         else:
             self.tracking = None
-        self.scroll_to_item()
+        self.scroll_to_tracking()
 
-    def scroll_to_item(self):
+    def go_to_item(self, address):
+        self.tracking = None
+        if address < 0 or address >= self.emulator.memory_size:
+            return
+        self.widget.scrollToItem(self.widget.item(address, 0),QtWidgets.QAbstractItemView.ScrollHint.PositionAtCenter)
+
+    def scroll_to_tracking(self):
         scrollto = None
 
         if self.tracking == "A":
@@ -194,9 +185,9 @@ class RamView():
         for i in range(self.emulator.memory_size):
             self.update_RAM(i)
 
-        self.scroll_to_item()
-        self.screen.update_screen()
-        self.registers.update()
+        self.scroll_to_tracking()
+        self.gui.screen.update_screen()
+        self.gui.registers.update()
 
     def update_RAM(self,i):
         if i < 0 or i >= self.emulator.memory_size:
@@ -232,14 +223,14 @@ class RamView():
             raise SyntaxError("No format: "+self.format)
         self.widget.item(i, 2).setText(val_string)
 
-        self.screen.update_value(i)
+        self.gui.screen.update_value(i)
         
 
     def format_changed(self, format):
         self.format = format
         self.update_all_RAM()
-        self.registers.update()
-        self.keyboard.update()
+        self.gui.registers.update()
+        self.gui.keyboard.update()
 
     
     def bin_to_asm(self, val):
