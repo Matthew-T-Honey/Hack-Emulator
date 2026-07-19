@@ -60,13 +60,13 @@ class Registers():
         self.S_register.setVisible(self.PC_register.isVisible() and self.stack_view)
 
     def track_PC(self):
-        self.ram_view.tracking = "PC"
-        self.ram_view.scroll_to_item()
+        self.gui.ram_view.tracking = "PC"
+        self.gui.ram_view.scroll_to_item()
 
     def track_A(self):
-        self.ram_view.tracking = "A"
-        self.ram_view.scroll_to_item()
+        self.gui.ram_view.tracking = "A"
+        self.gui.ram_view.scroll_to_item()
 
     def track_P(self):
-        self.ram_view.tracking = "P"
-        self.ram_view.scroll_to_item()
+        self.gui.ram_view.tracking = "P"
+        self.gui.ram_view.scroll_to_item()

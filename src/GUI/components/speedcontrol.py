@@ -24,10 +24,15 @@ class SpeedControl():
         if len(self.times)>0:
             average_time = sum(self.times)/len(self.times)
             self.speed_label.setText(str(round(average_time,2)))
+
+    def reset_label(self):
+        self.speed_label.setText("0")
+        self.times = deque()
         
     def update_speed(self):
         if self.speed_slider.value()<10:
             self.speed = 10**((self.speed_slider.value()/10)-1)
         else:
             self.speed = 10**((self.speed_slider.value()/5)-2)
+        print(self.speed)
         self.times = deque()

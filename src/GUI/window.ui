@@ -89,7 +89,7 @@
           <item row="4" column="5">
            <widget class="QTableWidget" name="D_register">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
               <horstretch>0</horstretch>
               <verstretch>1</verstretch>
              </sizepolicy>
@@ -25120,7 +25120,7 @@
           <item row="3" column="6">
            <widget class="QTableWidget" name="A_register">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
               <horstretch>0</horstretch>
               <verstretch>1</verstretch>
              </sizepolicy>
@@ -25172,7 +25172,7 @@
           <item row="3" column="7">
            <widget class="QTableWidget" name="P_register">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
               <horstretch>0</horstretch>
               <verstretch>1</verstretch>
              </sizepolicy>
@@ -25224,7 +25224,7 @@
           <item row="3" column="5">
            <widget class="QTableWidget" name="PC_register">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
               <horstretch>0</horstretch>
               <verstretch>1</verstretch>
              </sizepolicy>
@@ -25289,7 +25289,7 @@
           <item row="4" column="7">
            <widget class="QTableWidget" name="S_register">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
               <horstretch>0</horstretch>
               <verstretch>1</verstretch>
              </sizepolicy>
@@ -50156,7 +50156,7 @@
           <item row="4" column="6">
            <widget class="QTableWidget" name="M_register">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
               <horstretch>0</horstretch>
               <verstretch>1</verstretch>
              </sizepolicy>

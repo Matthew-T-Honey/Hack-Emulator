@@ -114,6 +114,7 @@ class ExecutionController():
         
 
     def stop_code(self):
+        self.gui.speed_control.reset_label()
         self.run_button.setText("Run")
         self.runtime_timer.stop()
         self.running = False

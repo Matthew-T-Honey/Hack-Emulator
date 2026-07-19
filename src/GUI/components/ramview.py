@@ -86,7 +86,7 @@ class RamView():
         self.widget.itemClicked.connect(self.track_item)
         self.widget.itemChanged.connect(self.update_item)
         self.widget.verticalScrollBar().valueChanged.connect(self.gui.token_view.update_scrollbar)
-        self.RAM_search.returnPressed.connect(self.search_RAM)
+        self.RAM_search.textChanged.connect(self.search_RAM)
         gui.ui.actionRAM_View.triggered.connect(self.toggle_visible)
         gui.ui.actionToggle_Stack_View.triggered.connect(self.toggle_stack_view)
 
