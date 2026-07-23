@@ -30,6 +30,15 @@ class HACK_GUI():
 
         self.ui.setupUi(self.window)
 
+        for action in [self.ui.actionCode_View,
+                       self.ui.actionToken_View,
+                       self.ui.actionRAM_View,
+                       self.ui.actionRegister_View,
+                       self.ui.actionScreen_View,
+                       self.ui.actionKeyboard_View]:
+            action.setChecked(True)
+
+
         self.token_view = TokenView(self, self.emulator)
         self.code_view = CodeView(self)
         self.speed_control = SpeedControl(self)
@@ -51,16 +60,22 @@ class HACK_GUI():
 
         QtWidgets.QApplication.instance().installEventFilter(self.window)
 
-        self.app.styleHints().setColorScheme(QtCore.Qt.ColorScheme.Light)
+        if self.app.styleHints().colorScheme() == QtCore.Qt.ColorScheme.Dark:
+            self.ui.actionDark_Mode.setChecked(True)
+        self.ui.actionDark_Mode.toggled.connect(self.toggle_dark_mode)
 
     def open_window(self):
         self.window.show()
-
         sys.exit(self.app.exec())
 
     def reset_emulator(self):
         self.token_view.parse_code()
 
+    def toggle_dark_mode(self, toggled_on):
+        if toggled_on == True:
+            self.app.styleHints().setColorScheme(QtCore.Qt.ColorScheme.Dark)
+        elif toggled_on == False:
+            self.app.styleHints().setColorScheme(QtCore.Qt.ColorScheme.Light)
     
     
         
@@ -77,10 +92,31 @@ class MainWindow(QtWidgets.QMainWindow):
             if event.type() == QtCore.QEvent.Type.KeyRelease:
                 if not event.isAutoRepeat():
                     self.gui.keyboard.key_released(event)
+            if event.type() == QtCore.QEvent.Type.Close:
+                return self.on_close(event)
         if event.type() == QtCore.QEvent.Type.Wheel:
             self.gui.ram_view.tracking = None
+        
         return False
-
+    
+    def on_close(self, event):
+        if self.gui.code_view.saved or (self.gui.code_view.widget.toPlainText() == "" and self.gui.code_view.codefile == None):
+            event.accept()
+            return False
+        else:
+            ret = QtWidgets.QMessageBox.question(self, "Exiting...",
+                "You might have unsaved code,\nWould you like to save?",
+                QtWidgets.QMessageBox.StandardButton.Save |
+                QtWidgets.QMessageBox.StandardButton.Discard |
+                QtWidgets.QMessageBox.StandardButton.Cancel)
+            
+            if ret == QtWidgets.QMessageBox.StandardButton.Save:
+                self.gui.code_view.save_file()
+            elif ret == QtWidgets.QMessageBox.StandardButton.Cancel:
+                event.ignore()
+                return True
+            event.accept()
+            return False
 
 
 

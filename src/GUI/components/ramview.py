@@ -193,11 +193,11 @@ class RamView():
         if i < 0 or i >= self.emulator.memory_size:
             return
         if i in [self.emulator.A_value, self.emulator.PC_value]:
-            color = QtGui.QColor(255,255,100)
+            color = QtGui.QColor(255,255,50,100)
         elif i == self.emulator.P_value and self.stack_view:
-            color = QtGui.QColor(255,255,100)
+            color = QtGui.QColor(255,255,50,100)
         else:
-            color = QtGui.QColor(255,255,255)
+            color = QtGui.QColor(255,255,255,0)
         address_str_addition = ""
         if i == self.emulator.A_value:
             address_str_addition += " (A)"

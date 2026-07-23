@@ -2,6 +2,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from src.GUI.components.error_box import ErrorBox
 import math
 import time
+import random
 
 class ExecutionController():
     def __init__(self, gui, emulator):
@@ -23,9 +24,9 @@ class ExecutionController():
         self.running = False
         self.update_batch_size()
 
-        gui.ui.speed_slider.actionTriggered.connect(self.update_batch_size)
+        gui.ui.speed_slider.valueChanged.connect(self.update_batch_size)
 
-        
+
 
 
     def run_batch(self):
@@ -125,9 +126,16 @@ class ExecutionController():
         speed = self.gui.speed_control.get_speed()
 
         self.batch_size = math.ceil(speed / 1000)
+
+        if self.batch_size >= 100:
+            #Some randomness so that loopsize and batch size lining up doesn't look weird
+            self.batch_size += random.randint(-5,5)
+
         self.runspeed = math.floor((1000 * self.batch_size) / speed)
 
         self.runtime_timer.setInterval(self.runspeed)
+
+        
 
 
 

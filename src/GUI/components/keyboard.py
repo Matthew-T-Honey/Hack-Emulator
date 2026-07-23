@@ -13,6 +13,10 @@ class Keyboard():
         self.checkbox.stateChanged.connect(self.update)
         gui.ui.actionKeyboard_View.triggered.connect(self.toggle_visible)
 
+        self.widget.resizeColumnsToContents()
+        self.widget.item(0,1).setText("")
+        
+
 
     def key_pressed(self, key):
         key_int = KeyMapping.keyevent_to_int(key)

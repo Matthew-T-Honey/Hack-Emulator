@@ -8,6 +8,9 @@ class CodeView():
         self.save_button = gui.ui.save_button
         self.lex_assemble_button = gui.ui.lex_assemble_button
         self.line_numbers = gui.ui.code_line_numbers
+        self.code_search = gui.ui.code_search
+        self.save_as_button = gui.ui.save_as_button
+        self.filename_label = gui.ui.filename_label
 
 
         self.lex_assemble_button.clicked.connect(self.lex_or_assemble_code)
@@ -18,6 +21,9 @@ class CodeView():
         gui.ui.actionSave_File.triggered.connect(self.save_file)
         self.save_button.clicked.connect(self.save_file)
 
+        gui.ui.actionSave_As.triggered.connect(self.save_as_file)
+        self.save_as_button.clicked.connect(self.save_as_file)
+
         gui.ui.actionCode_View.triggered.connect(self.toggle_visible)
 
         self.set_num_of_lines()
@@ -26,7 +32,21 @@ class CodeView():
         self.widget.verticalScrollBar().valueChanged.connect(self.scroll_code)
 
         self.widget.textChanged.connect(self.set_num_of_lines)
+        self.code_search.textChanged.connect(self.search_code)
 
+        self.codefile = None
+        self.saved = False
+        self.widget.textChanged.connect(self.update_filename)
+
+
+    def update_filename(self):
+        if self.saved:
+            self.filename_label.setText(self.codefile.split("/")[-1]+"*")
+            self.saved = False
+
+    def search_code(self):
+        text = self.code_search.text()
+        self.widget.setTextCursor(self.widget.document().find(text,0))
 
     def set_num_of_lines(self):
         num = self.widget.toPlainText().count("\n")
@@ -39,18 +59,25 @@ class CodeView():
         self.line_numbers.setPlainText(lines)
         self.line_numbers.verticalScrollBar().setValue(self.previous_scrollbar_position)
 
-
     def scroll_line_numbers(self, value):
         self.widget.verticalScrollBar().setValue(value)
-
-
 
     def scroll_code(self, value):
         self.line_numbers.verticalScrollBar().setValue(value)
 
-
-
     def load_file(self):
+        if not self.saved and (self.widget.toPlainText() != "" or self.codefile != None):
+            ret = QtWidgets.QMessageBox.question(self.gui.window, "Opening...",
+            "You have unsaved code,\nWould you like to save?",
+            QtWidgets.QMessageBox.StandardButton.Save |
+            QtWidgets.QMessageBox.StandardButton.Discard |
+            QtWidgets.QMessageBox.StandardButton.Cancel)
+
+            if ret == QtWidgets.QMessageBox.StandardButton.Save:
+                self.save_file()
+            elif ret == QtWidgets.QMessageBox.StandardButton.Cancel:
+                return
+
         filename = QtWidgets.QFileDialog.getOpenFileName(self.widget, "Load File","","(*.asm)")[0]
         if filename:
             try:
@@ -59,16 +86,34 @@ class CodeView():
                 filelines = ("").join(lines)
                 file.close()
                 self.widget.setPlainText(filelines)
+                self.codefile = filename
+                self.filename_label.setText(self.codefile.split("/")[-1])
+                self.saved = True
             except:
                 return
 
     def save_file(self):
+        if self.codefile != None:
+            content = self.widget.toPlainText()
+            f = open(self.codefile,"w")
+            f.write(content)
+            f.close()
+            self.saved = True
+            self.filename_label.setText(self.codefile.split("/")[-1])
+        else:
+            self.save_as_file()
+
+
+    def save_as_file(self):
         content = self.widget.toPlainText()
         filename = QtWidgets.QFileDialog.getSaveFileName(self.widget, "Save File","","(*.asm)")[0]
         if filename:
             f = open(filename,"w")
             f.write(content)
             f.close()
+            self.codefile = filename
+            self.filename_label.setText(self.codefile.split("/")[-1])
+            self.saved = True
 
 
     def save_code_to_file(self,file):
@@ -81,6 +126,9 @@ class CodeView():
         self.save_button.setVisible(self.widget.isVisible())
         self.load_button.setVisible(self.widget.isVisible())
         self.line_numbers.setVisible(self.widget.isVisible())
+        self.code_search.setVisible(self.widget.isVisible())
+        self.save_as_button.setVisible(self.widget.isVisible())
+        self.filename_label.setVisible(self.widget.isVisible())
 
     def lex_or_assemble_code(self):
         if self.gui.token_view.lex_code():

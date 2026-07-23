@@ -22,6 +22,13 @@ class Registers():
         self.P_register.itemClicked.connect(self.track_P)
         self.S_register.itemClicked.connect(self.track_P)
 
+        self.PC_register.resizeColumnsToContents()
+        self.D_register.resizeColumnsToContents()
+        self.A_register.resizeColumnsToContents()
+        self.M_register.resizeColumnsToContents()
+        self.P_register.resizeColumnsToContents()
+        self.S_register.resizeColumnsToContents()
+
     def update(self):
         self.update_one(self.PC_register,self.emulator.PC_value)
         self.update_one(self.D_register,self.emulator.D_value)
@@ -61,12 +68,12 @@ class Registers():
 
     def track_PC(self):
         self.gui.ram_view.tracking = "PC"
-        self.gui.ram_view.scroll_to_item()
+        self.gui.ram_view.scroll_to_tracking()
 
     def track_A(self):
         self.gui.ram_view.tracking = "A"
-        self.gui.ram_view.scroll_to_item()
+        self.gui.ram_view.scroll_to_tracking()
 
     def track_P(self):
         self.gui.ram_view.tracking = "P"
-        self.gui.ram_view.scroll_to_item()
+        self.gui.ram_view.scroll_to_tracking()

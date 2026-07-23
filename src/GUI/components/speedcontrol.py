@@ -34,5 +34,4 @@ class SpeedControl():
             self.speed = 10**((self.speed_slider.value()/10)-1)
         else:
             self.speed = 10**((self.speed_slider.value()/5)-2)
-        print(self.speed)
         self.times = deque()

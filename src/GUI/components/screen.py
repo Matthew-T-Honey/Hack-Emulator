@@ -25,17 +25,20 @@ class Screen():
 
         self.size_button.clicked.connect(self.update_size)
 
+        self.border = 4
+        self.widget.setFixedSize(512 + self.border,256 + self.border)
+
 
     def update_size(self):
         if self.scale == 1:
             self.scale = 2
             self.size_button.setText("Small Screen")
-            self.widget.setFixedSize(1024,512)
+            self.widget.setFixedSize(1024 + self.border,512 + self.border)
             self.widget.scale(2,2)
         else:
             self.scale = 1
             self.size_button.setText("Large Screen")
-            self.widget.setFixedSize(512,256)
+            self.widget.setFixedSize(512 + self.border,256 + self.border)
             self.widget.scale(0.5,0.5)
         self.update_screen()
 

@@ -49,7 +49,6 @@ drawgrid_loop:
 	load drawgrid_loop
 	mov 0 ;jmp
 
-	
 .data
 drawgrid_index: SCREEN
 drawgrid_column: 0
@@ -65,9 +64,6 @@ waitingloop:
 	mov d ;jne
 	load compute
 	mov 0; jmp
-
-
-
 
 .text
 #Draw all thee grid squares
@@ -165,14 +161,11 @@ draw:
                 load draw_inner_loop
                 mov 0 ;jmp
 
-
-
             draw_inner_loop_end:
 
             load draw_columndata
             mov m d
             add m m
-
 
             #Increment values
             load y
@@ -205,16 +198,12 @@ draw:
     load compute
     mov 0;jmp
 
-
-
 .data
 draw_address
 draw_x_address
 draw_loopindex
 draw_columndata
 draw_squarevalue
-
-
 
 .text
 #Compute the next grid state
@@ -263,7 +252,6 @@ compute:
         mov 0;jmp
 
     compute_copyloop1_end:
-
 
     #All the data manipulation go here:
 
@@ -465,10 +453,6 @@ compute:
                     load compute_dead_con_end
                     mov 0;jmp
 
-
-
-
-
             compute_dead_con:
             #Dead
             load count
@@ -500,9 +484,6 @@ compute:
 
 
             compute_dead_con_end:
-
-
-
             load y
             dec m m 
             load compute_yloop
@@ -516,7 +497,6 @@ compute:
         mov 0;jmp
 
     compute_xloop_end:
-
 
     #End of data manipulation
 
