@@ -25064,7 +25064,7 @@
                <widget class="QLabel" name="speed_label">
                 <property name="minimumSize">
                  <size>
-                  <width>100</width>
+                  <width>120</width>
                   <height>0</height>
                  </size>
                 </property>
@@ -25077,7 +25077,7 @@
                <widget class="QLabel" name="target_label">
                 <property name="minimumSize">
                  <size>
-                  <width>100</width>
+                  <width>150</width>
                   <height>0</height>
                  </size>
                 </property>
