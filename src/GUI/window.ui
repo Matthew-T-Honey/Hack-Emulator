@@ -25077,7 +25077,7 @@
                <widget class="QLabel" name="target_label">
                 <property name="minimumSize">
                  <size>
-                  <width>150</width>
+                  <width>100</width>
                   <height>0</height>
                  </size>
                 </property>

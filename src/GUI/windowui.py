@@ -221,7 +221,7 @@ class Ui_EmulatorWindow(object):
         self.speed_label.setObjectName("speed_label")
         self.gridLayout_4.addWidget(self.speed_label, 0, 2, 1, 1)
         self.target_label = QtWidgets.QLabel(parent=self.scrollAreaWidgetContents)
-        self.target_label.setMinimumSize(QtCore.QSize(150, 0))
+        self.target_label.setMinimumSize(QtCore.QSize(100, 0))
         self.target_label.setObjectName("target_label")
         self.gridLayout_4.addWidget(self.target_label, 1, 2, 1, 1)
         self.speed_slider = QtWidgets.QSlider(parent=self.scrollAreaWidgetContents)
