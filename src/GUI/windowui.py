@@ -629,7 +629,7 @@ class Ui_EmulatorWindow(object):
         self.RAM_search.setPlaceholderText(_translate("EmulatorWindow", "Search Address"))
         self.run_button.setText(_translate("EmulatorWindow", "Run"))
         self.speed_label.setText(_translate("EmulatorWindow", "Speed: 0"))
-        self.target_label.setText(_translate("EmulatorWindow", "Target:1.0"))
+        self.target_label.setText(_translate("EmulatorWindow", "Target: 1.0"))
         self.screen_size_button.setText(_translate("EmulatorWindow", "Large Screen"))
         item = self.token_view.horizontalHeaderItem(0)
         item.setText(_translate("EmulatorWindow", "Symbol"))
