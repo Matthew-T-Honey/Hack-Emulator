@@ -31,7 +31,11 @@ class TokenView():
         self.parse_button.clicked.connect(self.parse_code)
 
         self.widget.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Fixed)
-        self.widget.horizontalHeader().setMaximumSectionSize(150)
+        self.widget.horizontalHeader().setMaximumSectionSize(130)
+
+        pixmapi = QtWidgets.QStyle.StandardPixmap.SP_ArrowRight
+        icon = self.gui.window.style().standardIcon(pixmapi)
+        self.parse_button.setIcon(icon)
 
         
     def assemble_code(self):

@@ -4,6 +4,7 @@ from collections import deque
 
 class SpeedControl():
     def __init__(self, gui):
+        self.gui = gui
         self.widget = gui.ui.speed_widget
         self.speed_slider = gui.ui.speed_slider
         self.speed_label = gui.ui.speed_label

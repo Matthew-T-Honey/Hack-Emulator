@@ -108,6 +108,11 @@ class ExecutionController():
 
     def run_code(self):
         self.run_button.setText("Stop")
+        pixmapi = QtWidgets.QStyle.StandardPixmap.SP_MediaStop
+        icon = self.gui.window.style().standardIcon(pixmapi)
+        self.gui.ram_view.run_button.setIcon(icon)
+
+
         self.runtime_timer.start()
         self.running = True
         for i in range(self.emulator.memory_size):
@@ -117,6 +122,10 @@ class ExecutionController():
     def stop_code(self):
         self.gui.speed_control.reset_label()
         self.run_button.setText("Run")
+        pixmapi = QtWidgets.QStyle.StandardPixmap.SP_MediaPlay
+        icon = self.gui.window.style().standardIcon(pixmapi)
+        self.gui.ram_view.run_button.setIcon(icon)
+
         self.runtime_timer.stop()
         self.running = False
         for i in range(self.emulator.memory_size):

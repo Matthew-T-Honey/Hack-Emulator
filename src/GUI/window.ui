@@ -24769,6 +24769,9 @@
              <property name="text">
               <string>BP</string>
              </property>
+             <property name="toolTip">
+              <string>Breakpoint</string>
+             </property>
             </column>
             <column>
              <property name="text">
@@ -24987,7 +24990,7 @@
                </sizepolicy>
               </property>
               <property name="layoutDirection">
-               <enum>Qt::RightToLeft</enum>
+               <enum>Qt::LeftToRight</enum>
               </property>
               <property name="text">
                <string>Run</string>
@@ -25068,13 +25071,13 @@
               </property>
               <property name="minimumSize">
                <size>
-                <width>220</width>
+                <width>230</width>
                 <height>61</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>220</width>
+                <width>230</width>
                 <height>61</height>
                </size>
               </property>
@@ -25104,6 +25107,9 @@
                  <width>160</width>
                  <height>30</height>
                 </size>
+               </property>
+               <property name="toolTip">
+                <string/>
                </property>
                <property name="minimum">
                 <number>0</number>
@@ -50302,7 +50308,7 @@
             </item>
            </widget>
           </item>
-          <item row="1" column="2" rowspan="2">
+          <item row="2" column="2">
            <layout class="QGridLayout" name="gridLayout_2">
             <item row="2" column="1">
              <widget class="QLineEdit" name="code_search">
@@ -50327,39 +50333,6 @@
               </property>
              </widget>
             </item>
-            <item row="0" column="0" alignment="Qt::AlignLeft|Qt::AlignBottom">
-             <widget class="QPushButton" name="load_button">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>Open</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0" alignment="Qt::AlignLeft|Qt::AlignBottom">
-             <widget class="QPushButton" name="save_as_button">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>Save As</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QPushButton" name="save_button">
-              <property name="text">
-               <string>Save</string>
-              </property>
-             </widget>
-            </item>
             <item row="1" column="1" colspan="2">
              <widget class="QLabel" name="filename_label">
               <property name="sizePolicy">
@@ -50370,6 +50343,29 @@
               </property>
               <property name="text">
                <string>Untitled.asm*</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QPushButton" name="save_button">
+              <property name="text">
+               <string>Save</string>
+              </property>
+              <property name="icon">
+               <iconset theme="view-fullscreen"/>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QPushButton" name="load_button">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Open</string>
               </property>
              </widget>
             </item>
@@ -50399,6 +50395,7 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionNew"/>
     <addaction name="actionLoad"/>
     <addaction name="actionSave_File"/>
     <addaction name="actionSave_As"/>
@@ -50605,6 +50602,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+S</string>
+   </property>
+  </action>
+  <action name="actionNew">
+   <property name="text">
+    <string>New</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
    </property>
   </action>
  </widget>

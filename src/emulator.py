@@ -71,9 +71,13 @@ class HackEmulator():
         return self.get_value(self.__P_register.get_int())
     
     def __set_M_value(self, value):
+        if self.__A_register.get_int() >= self.__memory_locations or self.__A_register.get_int() < 0:
+            raise ValueError(f"Cannot set M value for address: {self.__A_register.get_int()}")
         self.set_value(self.__A_register.get_int(), value)
 
     def __set_S_value(self, value):
+        if self.__P_register.get_int() >= self.__memory_locations or self.__P_register.get_int() < 0:
+            raise ValueError(f"Cannot set S value for address: {self.__P_register.get_int()}")
         self.set_value(self.__P_register.get_int(), value)
 
     def run_program(self, steps):

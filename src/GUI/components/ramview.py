@@ -91,6 +91,18 @@ class RamView():
         gui.ui.actionToggle_Stack_View.triggered.connect(self.toggle_stack_view)
 
         self.widget.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Fixed)
+
+        pixmapi = QtWidgets.QStyle.StandardPixmap.SP_MediaPlay
+        icon = self.gui.window.style().standardIcon(pixmapi)
+        self.run_button.setIcon(icon)
+
+        pixmapi = QtWidgets.QStyle.StandardPixmap.SP_MediaSeekForward
+        icon = self.gui.window.style().standardIcon(pixmapi)
+        self.step_button.setIcon(icon)
+
+        pixmapi = QtWidgets.QStyle.StandardPixmap.SP_MediaSkipBackward
+        icon = self.gui.window.style().standardIcon(pixmapi)
+        self.reset_button.setIcon(icon)
         
 
     def search_RAM(self):
