@@ -25,7 +25,7 @@ class SpeedControl():
         if len(self.times)>0:
             average_time = sum(self.times)/len(self.times)
             if average_time >= 100:
-                self.speed_label.setText("Speed: "+str(int(average_time)))
+                self.speed_label.setText("Speed: "+format(int(average_time),","))
             else:
                 self.speed_label.setText("Speed: "+str(round(average_time,2)))
             
@@ -41,7 +41,13 @@ class SpeedControl():
             self.speed = 10**((self.speed_slider.value()/5)-2)
         self.speed_label.setText("Speed: 0")
         if self.speed >= 100:
-            self.target_label.setText("Target: "+str(int(self.speed)))
+            self.target_label.setText("Target: "+format(int(self.speed),","))
         else:
             self.target_label.setText("Target: "+str(round(self.speed,2)))
         self.times = deque()
+
+    def setVisible(self,isVisible):
+        self.speed_slider.setVisible(isVisible)
+        self.speed_label.setVisible(isVisible)
+        self.target_label.setVisible(isVisible)
+

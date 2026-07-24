@@ -61,6 +61,7 @@ class RamView():
         self.emulator = emulator
         self.speed_control = gui.speed_control
         self.RAM_search = gui.ui.RAM_search
+        self.title = gui.ui.RAM_title
 
         self.tracking = None
         self.stack_view = True
@@ -179,7 +180,7 @@ class RamView():
         self.tracking = None
         if address < 0 or address >= self.emulator.memory_size:
             return
-        self.widget.scrollToItem(self.widget.item(address, 0),QtWidgets.QAbstractItemView.ScrollHint.PositionAtCenter)
+        self.widget.scrollToItem(self.widget.item(address, 0),QtWidgets.QAbstractItemView.ScrollHint.PositionAtTop)
 
     def scroll_to_tracking(self):
         scrollto = None
@@ -314,9 +315,10 @@ class RamView():
         self.reset_button.setVisible(self.widget.isVisible())
         self.step_button.setVisible(self.widget.isVisible())
         self.run_button.setVisible(self.widget.isVisible())
-        self.speed_control.widget.setVisible(self.widget.isVisible())
         self.format_dropdown.setVisible(self.widget.isVisible())
         self.RAM_search.setVisible(self.widget.isVisible())
+        self.title.setVisible(self.widget.isVisible())
+        self.speed_control.setVisible(self.widget.isVisible())
 
 
 

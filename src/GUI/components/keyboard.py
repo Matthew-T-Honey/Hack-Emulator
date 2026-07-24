@@ -8,6 +8,7 @@ class Keyboard():
         self.emulator = emualtor
         self.widget = gui.ui.KBD_view
         self.checkbox = gui.ui.KBD_checkbox
+        self.title = gui.ui.keyboard_title
 
         self.held_keys = []
         self.checkbox.stateChanged.connect(self.update)
@@ -55,6 +56,7 @@ class Keyboard():
     def toggle_visible(self):
         self.widget.setVisible(not self.widget.isVisible())
         self.checkbox.setVisible(self.widget.isVisible())
+        self.title.setVisible(self.widget.isVisible())
         
 
         

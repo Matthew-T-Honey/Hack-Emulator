@@ -10,6 +10,7 @@ class Registers():
         self.P_register = gui.ui.P_register
         self.S_register = gui.ui.S_register
         self.emulator = emulator
+        self.title = gui.ui.register_title
 
         gui.ui.actionRegister_View.triggered.connect(self.toggle_visible)
         gui.ui.actionToggle_Stack_View.triggered.connect(self.toggle_stack_view)
@@ -60,6 +61,7 @@ class Registers():
         self.M_register.setVisible(not self.M_register.isVisible())
         self.P_register.setVisible(not self.P_register.isVisible() and self.stack_view)
         self.S_register.setVisible(not self.S_register.isVisible() and self.stack_view)
+        self.title.setVisible(not self.title.isVisible())
         
     def toggle_stack_view(self):
         self.stack_view = not self.stack_view

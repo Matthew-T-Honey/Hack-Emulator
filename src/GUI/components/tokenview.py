@@ -11,6 +11,8 @@ class TokenView():
         self.widget = gui.ui.token_view
         self.lex_assemble_button = gui.ui.lex_assemble_button
         self.parse_button = gui.ui.parse_button
+        self.token_search = gui.ui.token_search
+        self.title = gui.ui.token_title
 
         self.lexer_tokens = None
         self.lexer = None
@@ -29,6 +31,7 @@ class TokenView():
         gui.ui.actionAssemble_Code.triggered.connect(self.assemble_code)
 
         self.parse_button.clicked.connect(self.parse_code)
+        self.token_search.textChanged.connect(self.search_tokens)
 
         self.widget.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Fixed)
         self.widget.horizontalHeader().setMaximumSectionSize(130)
@@ -36,6 +39,17 @@ class TokenView():
         pixmapi = QtWidgets.QStyle.StandardPixmap.SP_ArrowRight
         icon = self.gui.window.style().standardIcon(pixmapi)
         self.parse_button.setIcon(icon)
+
+
+    def search_tokens(self):
+        if self.lexer == None:
+            return
+        text = self.token_search.text()
+        for symbol in self.lexer.symbol_table:
+            if text in symbol:
+                self.widget.scrollToItem(self.widget.item(self.lexer.symbol_table[symbol], 0),QtWidgets.QAbstractItemView.ScrollHint.PositionAtTop)
+                return
+
 
         
     def assemble_code(self):
@@ -114,6 +128,8 @@ class TokenView():
     def toggle_visible(self):
         self.widget.setVisible(not self.widget.isVisible())
         self.parse_button.setVisible(self.widget.isVisible())
+        self.token_search.setVisible(self.widget.isVisible())
+        self.title.setVisible(self.widget.isVisible())
         if self.widget.isVisible():
             self.lex_assemble_button.setText("Lex")
         else:

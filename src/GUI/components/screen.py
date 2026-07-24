@@ -6,6 +6,7 @@ class Screen():
         self.screen = QtWidgets.QGraphicsScene()
         self.widget = gui.ui.screen_view
         self.size_button = gui.ui.screen_size_button
+        self.title = gui.ui.screen_title
 
         self.scale = 1
 
@@ -76,5 +77,6 @@ class Screen():
     def toggle_visible(self):
         self.widget.setVisible(not self.widget.isVisible())
         self.size_button.setVisible(self.widget.isVisible())
+        self.title.setVisible(self.widget.isVisible())
         
 

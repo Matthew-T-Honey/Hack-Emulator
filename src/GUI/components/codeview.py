@@ -10,6 +10,7 @@ class CodeView():
         self.line_numbers = gui.ui.code_line_numbers
         self.code_search = gui.ui.code_search
         self.filename_label = gui.ui.filename_label
+        self.title = gui.ui.code_title
 
 
         self.lex_assemble_button.clicked.connect(self.lex_or_assemble_code)
@@ -164,6 +165,7 @@ class CodeView():
         self.line_numbers.setVisible(self.widget.isVisible())
         self.code_search.setVisible(self.widget.isVisible())
         self.filename_label.setVisible(self.widget.isVisible())
+        self.title.setVisible(self.widget.isVisible())
 
     def lex_or_assemble_code(self):
         if self.gui.token_view.lex_code():
