@@ -12,8 +12,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1709</width>
-    <height>960</height>
+    <width>1690</width>
+    <height>965</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -41,7 +41,7 @@
      <height>0</height>
     </size>
    </property>
-   <layout class="QGridLayout" name="gridLayout_4">
+   <layout class="QGridLayout" name="gridLayout_6">
     <item row="0" column="0">
      <widget class="QScrollArea" name="scrollArea">
       <property name="frameShape">
@@ -55,8 +55,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>1691</width>
-         <height>899</height>
+         <width>1672</width>
+         <height>904</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="gridLayout_5">
@@ -135,7 +135,7 @@
           <item row="3" column="4" rowspan="6">
            <widget class="QTableWidget" name="RAM_view">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+             <sizepolicy hsizetype="Ignored" vsizetype="Expanding">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
@@ -24945,87 +24945,7 @@
             <property name="sizeConstraint">
              <enum>QLayout::SetDefaultConstraint</enum>
             </property>
-            <item row="1" column="4">
-             <spacer name="horizontalSpacer">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Fixed</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>0</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item row="0" column="5" rowspan="2" alignment="Qt::AlignBottom">
-             <widget class="QPushButton" name="reset_button">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>Reset</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="5" alignment="Qt::AlignBottom">
-             <widget class="QPushButton" name="step_button">
-              <property name="text">
-               <string>Step</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="5">
-             <widget class="QPushButton" name="run_button">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="layoutDirection">
-               <enum>Qt::LeftToRight</enum>
-              </property>
-              <property name="text">
-               <string>Run</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QLineEdit" name="RAM_search">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>110</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="inputMask">
-               <string/>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="maxLength">
-               <number>5</number>
-              </property>
-              <property name="placeholderText">
-               <string>Search Address</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1" colspan="3" alignment="Qt::AlignRight">
+            <item row="3" column="1" colspan="2" alignment="Qt::AlignRight">
              <widget class="QComboBox" name="format_dropdown">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -25058,217 +24978,167 @@
               </item>
              </widget>
             </item>
-            <item row="0" column="0" rowspan="3" colspan="4">
-             <widget class="QWidget" name="speed_widget" native="true">
-              <property name="enabled">
-               <bool>true</bool>
-              </property>
+            <item row="0" column="4" rowspan="2" alignment="Qt::AlignBottom">
+             <widget class="QPushButton" name="reset_button">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
-              <property name="minimumSize">
+              <property name="text">
+               <string>Reset</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="3">
+             <spacer name="horizontalSpacer">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeType">
+               <enum>QSizePolicy::Fixed</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
                <size>
-                <width>230</width>
-                <height>61</height>
+                <width>0</width>
+                <height>20</height>
                </size>
+              </property>
+             </spacer>
+            </item>
+            <item row="2" column="4" alignment="Qt::AlignBottom">
+             <widget class="QPushButton" name="step_button">
+              <property name="text">
+               <string>Step</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLineEdit" name="RAM_search">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
               </property>
               <property name="maximumSize">
                <size>
-                <width>230</width>
-                <height>61</height>
+                <width>110</width>
+                <height>16777215</height>
                </size>
               </property>
-              <widget class="QSlider" name="speed_slider">
-               <property name="geometry">
-                <rect>
-                 <x>10</x>
-                 <y>10</y>
-                 <width>160</width>
-                 <height>30</height>
-                </rect>
-               </property>
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>160</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>160</width>
-                 <height>30</height>
-                </size>
-               </property>
-               <property name="toolTip">
-                <string/>
-               </property>
-               <property name="minimum">
-                <number>0</number>
-               </property>
-               <property name="maximum">
-                <number>40</number>
-               </property>
-               <property name="value">
-                <number>10</number>
-               </property>
-               <property name="sliderPosition">
-                <number>10</number>
-               </property>
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="invertedAppearance">
-                <bool>false</bool>
-               </property>
-               <property name="invertedControls">
-                <bool>false</bool>
-               </property>
-               <property name="tickPosition">
-                <enum>QSlider::TicksBelow</enum>
-               </property>
-               <property name="tickInterval">
-                <number>10</number>
-               </property>
-              </widget>
-              <widget class="QLabel" name="speed_label">
-               <property name="geometry">
-                <rect>
-                 <x>170</x>
-                 <y>10</y>
-                 <width>75</width>
-                 <height>21</height>
-                </rect>
-               </property>
-               <property name="text">
-                <string>0</string>
-               </property>
-              </widget>
-              <widget class="QLabel" name="label_5">
-               <property name="geometry">
-                <rect>
-                 <x>38</x>
-                 <y>45</y>
-                 <width>31</width>
-                 <height>10</height>
-                </rect>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>50</width>
-                 <height>10</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>1</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-              <widget class="QLabel" name="label_4">
-               <property name="geometry">
-                <rect>
-                 <x>1</x>
-                 <y>45</y>
-                 <width>31</width>
-                 <height>10</height>
-                </rect>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>50</width>
-                 <height>10</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>0.1</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-              <widget class="QLabel" name="label_7">
-               <property name="geometry">
-                <rect>
-                 <x>75</x>
-                 <y>45</y>
-                 <width>31</width>
-                 <height>10</height>
-                </rect>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>50</width>
-                 <height>10</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>100</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-              <widget class="QLabel" name="label_6">
-               <property name="geometry">
-                <rect>
-                 <x>149</x>
-                 <y>45</y>
-                 <width>31</width>
-                 <height>10</height>
-                </rect>
-               </property>
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>50</width>
-                 <height>10</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>Max</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-              <widget class="QLabel" name="label_8">
-               <property name="geometry">
-                <rect>
-                 <x>112</x>
-                 <y>45</y>
-                 <width>31</width>
-                 <height>10</height>
-                </rect>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>50</width>
-                 <height>10</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>10000</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
+              <property name="inputMask">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="maxLength">
+               <number>5</number>
+              </property>
+              <property name="placeholderText">
+               <string>Search Address</string>
+              </property>
              </widget>
+            </item>
+            <item row="3" column="4">
+             <widget class="QPushButton" name="run_button">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="layoutDirection">
+               <enum>Qt::LeftToRight</enum>
+              </property>
+              <property name="text">
+               <string>Run</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0" rowspan="2" colspan="3">
+             <layout class="QGridLayout" name="gridLayout_4">
+              <item row="0" column="2">
+               <widget class="QLabel" name="speed_label">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Speed: 0</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2">
+               <widget class="QLabel" name="target_label">
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Target: 1.0</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0" rowspan="2" colspan="2">
+               <widget class="QSlider" name="speed_slider">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="toolTip">
+                 <string/>
+                </property>
+                <property name="minimum">
+                 <number>0</number>
+                </property>
+                <property name="maximum">
+                 <number>40</number>
+                </property>
+                <property name="value">
+                 <number>10</number>
+                </property>
+                <property name="sliderPosition">
+                 <number>10</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="invertedAppearance">
+                 <bool>false</bool>
+                </property>
+                <property name="invertedControls">
+                 <bool>false</bool>
+                </property>
+                <property name="tickPosition">
+                 <enum>QSlider::TicksBelow</enum>
+                </property>
+                <property name="tickInterval">
+                 <number>10</number>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
            </layout>
           </item>
@@ -50352,7 +50222,8 @@
                <string>Save</string>
               </property>
               <property name="icon">
-               <iconset theme="view-fullscreen"/>
+               <iconset theme="view-fullscreen">
+                <normaloff>.</normaloff>.</iconset>
               </property>
              </widget>
             </item>
@@ -50384,7 +50255,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1709</width>
+     <width>1690</width>
      <height>22</height>
     </rect>
    </property>
