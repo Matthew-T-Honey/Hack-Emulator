@@ -260,6 +260,12 @@
                   <height>0</height>
                  </size>
                 </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>105</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
                 <property name="text">
                  <string>Target: 1.0</string>
                 </property>
@@ -332,6 +338,12 @@
                  <size>
                   <width>105</width>
                   <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>105</width>
+                  <height>16777215</height>
                  </size>
                 </property>
                 <property name="text">
