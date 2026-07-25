@@ -1,8 +1,6 @@
-
-
 class DataCell():
     __size = 16 #The number of bits in the data cell
-    __n1 = 2**(__size-1)
+    __n1 = 2**(__size-1) #Precalculated values
     __n2 = 2**__size
     def __init__(self):
         self.__value = 0

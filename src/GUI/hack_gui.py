@@ -52,6 +52,7 @@ class HACK_GUI():
         self.ram_view.update_all_RAM()
         self.ram_view.widget.resizeColumnsToContents()
         self.token_view.widget.verticalScrollBar().valueChanged.connect(self.ram_view.update_scrollbar)
+        self.token_view.widget.verticalScrollBar().sliderPressed.connect(self.ram_view.stop_tracking)
 
 
         self.ui.reset_button.clicked.connect(self.reset_emulator)

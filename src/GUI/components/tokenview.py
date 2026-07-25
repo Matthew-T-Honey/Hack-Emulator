@@ -34,7 +34,7 @@ class TokenView():
         self.token_search.textChanged.connect(self.search_tokens)
 
         self.widget.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Fixed)
-        self.widget.horizontalHeader().setMaximumSectionSize(130)
+        self.widget.horizontalHeader().setMaximumSectionSize(100)
 
         pixmapi = QtWidgets.QStyle.StandardPixmap.SP_ArrowRight
         icon = self.gui.window.style().standardIcon(pixmapi)

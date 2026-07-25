@@ -45,7 +45,7 @@ class Registers():
         self.update_one(self.A_register,self.emulator.A_value)
         self.update_one(self.M_register,self.emulator.M_value)
         self.update_one(self.P_register,self.emulator.P_value)
-        self.update_one(self.S_register,self.emulator.S_value)
+        self.update_one(self.S_register,self.emulator.get_value(self.emulator.P_value+1))
 
 
     def update_one(self,register,value):

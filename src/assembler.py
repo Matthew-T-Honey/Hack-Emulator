@@ -1,6 +1,5 @@
 from src.assembler_tools.parser import Parser
 from src.assembler_tools.lexer import Lexer
-from src.emulator import HackEmulator
 
 class Assembler():
     def assemble(self, emulator, input_file):

@@ -87,6 +87,7 @@ class RamView():
         self.widget.itemClicked.connect(self.track_item)
         self.widget.itemChanged.connect(self.update_item)
         self.widget.verticalScrollBar().valueChanged.connect(self.gui.token_view.update_scrollbar)
+        self.widget.verticalScrollBar().sliderPressed.connect(self.stop_tracking)
         self.RAM_search.textChanged.connect(self.search_RAM)
         gui.ui.actionRAM_View.triggered.connect(self.toggle_visible)
         gui.ui.actionToggle_Stack_View.triggered.connect(self.toggle_stack_view)
@@ -123,7 +124,7 @@ class RamView():
 
     def is_breakpoint(self,address):
         if address < 0 or address >= self.emulator.memory_size:
-            return QtCore.Qt.CheckState.Unchecked
+            return False
         return self.widget.item(address,0).checkState() == QtCore.Qt.CheckState.Checked
 
 
@@ -162,6 +163,9 @@ class RamView():
             ErrorBox("Invalid RAM value on row "+str(item.row()))
             
         self.update_RAM(item.row())
+
+    def stop_tracking(self):
+        self.tracking = None
         
     def track_item(self, item):
         if item.column() == 0:
