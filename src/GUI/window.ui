@@ -25413,7 +25413,7 @@
           <item row="3" column="4" rowspan="10">
            <widget class="QTableWidget" name="RAM_view">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>

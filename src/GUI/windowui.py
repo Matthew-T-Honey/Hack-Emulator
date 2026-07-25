@@ -384,7 +384,7 @@ class Ui_EmulatorWindow(object):
         self.register_title.setObjectName("register_title")
         self.gridLayout.addWidget(self.register_title, 3, 5, 2, 3)
         self.RAM_view = QtWidgets.QTableWidget(parent=self.scrollAreaWidgetContents)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Expanding)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.RAM_view.sizePolicy().hasHeightForWidth())
