@@ -423,6 +423,12 @@
             </item>
             <item row="3" column="3" alignment="Qt::AlignBottom">
              <widget class="QPushButton" name="step_button">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="text">
                <string>Step</string>
               </property>
