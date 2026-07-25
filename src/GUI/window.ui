@@ -86,6 +86,9 @@
           <property name="bottomMargin">
            <number>20</number>
           </property>
+          <property name="spacing">
+           <number>4</number>
+          </property>
           <item row="5" column="5">
            <widget class="QTableWidget" name="PC_register">
             <property name="sizePolicy">
@@ -99,6 +102,9 @@
               <width>16777215</width>
               <height>30</height>
              </size>
+            </property>
+            <property name="verticalScrollBarPolicy">
+             <enum>Qt::ScrollBarAlwaysOff</enum>
             </property>
             <property name="horizontalScrollBarPolicy">
              <enum>Qt::ScrollBarAlwaysOff</enum>
@@ -152,6 +158,9 @@
               <height>30</height>
              </size>
             </property>
+            <property name="verticalScrollBarPolicy">
+             <enum>Qt::ScrollBarAlwaysOff</enum>
+            </property>
             <property name="horizontalScrollBarPolicy">
              <enum>Qt::ScrollBarAlwaysOff</enum>
             </property>
@@ -172,7 +181,7 @@
             </attribute>
             <row>
              <property name="text">
-              <string>M  </string>
+              <string>M</string>
              </property>
             </row>
             <column>
@@ -50095,6 +50104,9 @@
               <height>30</height>
              </size>
             </property>
+            <property name="verticalScrollBarPolicy">
+             <enum>Qt::ScrollBarAlwaysOff</enum>
+            </property>
             <property name="horizontalScrollBarPolicy">
              <enum>Qt::ScrollBarAlwaysOff</enum>
             </property>
@@ -50115,7 +50127,7 @@
             </attribute>
             <row>
              <property name="text">
-              <string>P  </string>
+              <string>P</string>
              </property>
             </row>
             <column>
@@ -50147,6 +50159,9 @@
               <height>30</height>
              </size>
             </property>
+            <property name="verticalScrollBarPolicy">
+             <enum>Qt::ScrollBarAlwaysOff</enum>
+            </property>
             <property name="horizontalScrollBarPolicy">
              <enum>Qt::ScrollBarAlwaysOff</enum>
             </property>
@@ -50167,7 +50182,7 @@
             </attribute>
             <row>
              <property name="text">
-              <string>D  </string>
+              <string>D</string>
              </property>
             </row>
             <column>
@@ -50212,6 +50227,9 @@
               <height>30</height>
              </size>
             </property>
+            <property name="verticalScrollBarPolicy">
+             <enum>Qt::ScrollBarAlwaysOff</enum>
+            </property>
             <property name="horizontalScrollBarPolicy">
              <enum>Qt::ScrollBarAlwaysOff</enum>
             </property>
@@ -50232,7 +50250,7 @@
             </attribute>
             <row>
              <property name="text">
-              <string>A  </string>
+              <string>A</string>
              </property>
             </row>
             <column>
@@ -50292,6 +50310,9 @@
               <height>30</height>
              </size>
             </property>
+            <property name="verticalScrollBarPolicy">
+             <enum>Qt::ScrollBarAlwaysOff</enum>
+            </property>
             <property name="horizontalScrollBarPolicy">
              <enum>Qt::ScrollBarAlwaysOff</enum>
             </property>
@@ -50312,7 +50333,7 @@
             </attribute>
             <row>
              <property name="text">
-              <string>S  </string>
+              <string>S</string>
              </property>
             </row>
             <column>

@@ -30,6 +30,15 @@ class Registers():
         self.P_register.resizeColumnsToContents()
         self.S_register.resizeColumnsToContents()
 
+        width = self.PC_register.verticalHeader().sizeHint().width()
+        self.PC_register.verticalHeader().setFixedWidth(width)
+        self.D_register.verticalHeader().setFixedWidth(width)
+        self.A_register.verticalHeader().setFixedWidth(width)
+        self.M_register.verticalHeader().setFixedWidth(width)
+        self.P_register.verticalHeader().setFixedWidth(width)
+        self.S_register.verticalHeader().setFixedWidth(width)
+
+
     def update(self):
         self.update_one(self.PC_register,self.emulator.PC_value)
         self.update_one(self.D_register,self.emulator.D_value)
