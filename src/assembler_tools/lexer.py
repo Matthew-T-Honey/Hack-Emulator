@@ -144,8 +144,10 @@ class Lexer():
     
     def __lex_variable_declaration(self, string_list, line_number):
         tokenlist = []
-        if self.__is_an_integer(string_list[0]):
+        if self.__is_an_integer(string_list[0]) and len(string_list) == 1:
             return [Token(int(string_list[0]), TokenType.INTEGER_LITERAL)]
+        if string_list[0].lower() in self.__keywords and len(string_list) == 1:
+            return [Token(string_list[0].upper(), TokenType.SYMBOL)]
         if self.__is_a_blocked_string(string_list[0]):
             raise SyntaxError(f"Invalid variable name: {string_list[0]}")
 
