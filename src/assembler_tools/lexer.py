@@ -16,7 +16,13 @@ class Lexer():
                     "and",
                     "or",
                     "push",
-                    "pop"]
+                    "pop",
+                    "mult",
+                    "sqr",
+                    "divl",
+                    "divr",
+                    "modl",
+                    "modr"]
     
     __operands = ["a","d","m","s","p","1","0","-1"]
     __destinations = ["a","d","m","p","s"]
@@ -121,11 +127,11 @@ class Lexer():
             #Mov INSTRUCTION
             return self.__lex_mov_instruction(string_list)
         
-        if string_list[0].lower() in ["inc", "dec", "neg", "not"]:
+        if string_list[0].lower() in ["inc", "dec", "neg", "not", "sqr"]:
             #Unary INSTRUCTION
             return self.__lex_unary_instruction(string_list)
         
-        if string_list[0].lower() in ["add", "subl", "subr", "and", "or"]:
+        if string_list[0].lower() in ["add", "subl", "subr", "and", "or", "mult", "divl", "divr", "modl", "modr"]:
             #Binary INSTRUCTION
             return self.__lex_binary_instruction(string_list)
 

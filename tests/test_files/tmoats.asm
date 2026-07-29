@@ -10,7 +10,7 @@ mov 0 ;jmp
 
 .data
 testspassed: 0
-targettests: 44
+targettests: 63
 testresult: 0
 
 #===========================================================================================
@@ -733,9 +733,363 @@ kbdtest:
     mov d ;jne
     load testspassed
     inc M M
-    load successcondition
+    load multtests
     mov 0 ;jmp
 
+
+#===========================================================================================
+#                                   mult tests - 3 tests
+#===========================================================================================
+
+.data
+multtest1: -2  #-2*5 = -10
+multtest2: -32768  #-32768 * 2 = 0
+multtest3: -1234  #-1234 * -5678 = -5700
+
+.text
+multtests:
+    #Setup mult tests
+    load 5
+    mov a d
+    load multtest1
+    mult M M
+    load 2
+    mov a D
+    load multtest2
+    mult M M
+    load 5678
+    neg a D
+    load multtest3
+    mult M M
+
+#test multtest1
+    load multtest1
+    mov M D
+    load 10
+    add A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+#test multtest2
+    load multtest2
+    mov M D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+#test multtest3
+    load multtest3
+    mov M D
+    load 5700
+    add A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+    load sqrtests
+    mov 0 ;jmp
+
+#===========================================================================================
+#                                   sqr tests - 4 tests
+#===========================================================================================
+
+.data
+sqrtest1: 2  #2^2 = 4
+sqrtest2: -4  #-4^2 = 16
+sqrtest3: 200  #200^2 = -25536
+sqrtest4: 2000  #2000^2 = 2304
+
+.text
+sqrtests:
+    #Setup sqr tests
+    load sqrtest1
+    sqr M M
+    load sqrtest2
+    sqr M M
+    load sqrtest3
+    sqr M M
+    load sqrtest4
+    sqr M M
+
+#test sqrtest1
+    load sqrtest1
+    mov M D
+    load 4
+    subl A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+#test sqrtest2
+    load sqrtest2
+    mov M D
+    load 16
+    subl A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+#test sqrtest3
+    load sqrtest3
+    mov M D
+    load 25536
+    add A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+#test sqrtest4
+    load sqrtest4
+    mov M D
+    load 2304
+    subl A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+    load divltests
+    mov 0 ;jmp
+
+#===========================================================================================
+#                                   divl tests - 3 tests
+#===========================================================================================
+
+.data
+divltest1: 2  #7/2 = 3
+divltest2: -10  #1000/-10 = -100
+divltest3: -3  #-500/-3 = 166
+
+.text
+divltests:
+    #Setup divl tests
+    load 7
+    mov a d
+    load divltest1
+    divl M M
+    load 1000
+    mov a D
+    load divltest2
+    divl M M
+    load 500
+    neg a D
+    load divltest3
+    divl M M
+
+#test divltest1
+    load divltest1
+    mov M D
+    load 3
+    subl A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+#test divltest2
+    load divltest2
+    mov M D
+    load 100
+    add A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+#test divltest3
+    load divltest3
+    mov M D
+    load 166
+    subl A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+    load divrtests
+    mov 0 ;jmp
+
+
+#===========================================================================================
+#                                   divr tests - 3 tests
+#===========================================================================================
+
+.data
+divrtest1: 12340  #12340/567 = 21
+divrtest2: -12345  #-12345/678 = -19
+divrtest3: -24680  #-24680/-1357 = 18
+
+.text
+divrtests:
+    #Setup divr tests
+    load 567
+    mov a D
+    load divrtest1
+    divr M M
+    load 678
+    mov a d
+    load divrtest2
+    divr M M
+    load 1357
+    neg a d
+    load divrtest3
+    divr M M
+
+#test divrtest1
+    load divrtest1
+    mov M D
+    load 21
+    subl A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+#test divrtest2
+    load divrtest2
+    mov M D
+    load 19
+    add A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+#test divrtest3
+    load divrtest3
+    mov M D
+    load 18
+    subl A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+    load modltests
+    mov 0 ;jmp
+
+#===========================================================================================
+#                                   modl tests - 3 tests
+#===========================================================================================
+
+.data
+modltest1: 3  #10%3 = 1
+modltest2: 3  #-10%3 = 2
+modltest3: -3  #-10%-3 = -1
+
+.text
+modltests:
+    #Setup modl tests
+    load 10
+    mov a D
+    load modltest1
+    modl M M
+    load 10
+    neg a D
+    load modltest2
+    modl M M
+    load 10
+    neg a D
+    load modltest3
+    modl M M
+
+#test modltest1
+    load modltest1
+    mov M D
+    load 1
+    subl A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+#test modltest2
+    load modltest2
+    mov M D
+    load 2
+    subl A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+#test modltest3
+    load modltest3
+    mov M D
+    load 1
+    add A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+    load modrtests
+    mov 0 ;jmp
+
+#===========================================================================================
+#                                   modr tests - 3 tests
+#===========================================================================================
+
+.data
+modrtest1: 10  #10%3 = 1
+modrtest2: 10  #10%-3 = -2
+modrtest3: -10  #-10%-3 = -1
+
+.text
+modrtests:
+    #Setup modr tests
+    load 3
+    mov a D
+    load modrtest1
+    modr M M
+    load 3
+    neg a d
+    load modrtest2
+    modr M M
+    load 3
+    neg a d
+    load modrtest3
+    modr M M
+
+#test modrtest1
+    load modrtest1
+    mov M D
+    load 1
+    subl A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+#test modrtest2
+    load modrtest2
+    mov M D
+    load 2
+    add A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+#test modrtest3
+    load modrtest3
+    mov M D
+    load 1
+    add A D
+    load failcondition
+    mov D ;jne
+    load testspassed
+    inc M M
+
+    load successcondition
+    mov 0 ;jmp
 
 
 
@@ -761,7 +1115,7 @@ endloop:
 
 .text
 heaptest:
-    load this_address
+    load thismultaddress
     inc A D
     load HEAP
     subl a d
@@ -774,4 +1128,4 @@ heaptest:
     mov 0 ;jmp
 
 .data
-this_address  # Address near the start of the heap
+thismultaddress  # Address near the start of the heap

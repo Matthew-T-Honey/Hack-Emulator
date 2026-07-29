@@ -127,6 +127,12 @@ class HackEmulator():
         raise ValueError("Datacell bit error")
 
     def __compute_result(self, datacell, operand):
+        if datacell.get_bit(14) == 0:
+            return self.basic_compute(datacell, operand)
+        else:
+            return self.advanced_compute(datacell, operand)
+
+    def basic_compute(self, datacell, operand):
         first_operand = operand
         second_operand = self.__D_register.get_int()
         if datacell.get_bit(13) == 1:
@@ -149,6 +155,27 @@ class HackEmulator():
         if datacell.get_bit(8) == 1:
             result = ~result
         return result
+
+
+    def advanced_compute(self, datacell, operand):
+        compute_condition = 4 * datacell.get_bit(10) + 2 * datacell.get_bit(9) + datacell.get_bit(8)
+        if compute_condition in [0,1]:
+            return operand * self.__D_register.get_int()
+        elif compute_condition == 2:
+            return self.__D_register.get_int() * self.__D_register.get_int()
+        elif compute_condition == 3:
+            return operand * operand
+        elif compute_condition == 4:
+            return self.__D_register.get_int() // operand
+        elif compute_condition == 5:
+            return operand // self.__D_register.get_int()
+        elif compute_condition == 6:
+            return self.__D_register.get_int() % operand
+        elif compute_condition == 7:
+            return operand % self.__D_register.get_int()
+        else:
+            raise ValueError("Unrecognised compute value")
+
 
     def __store_result(self, datacell, result):
 

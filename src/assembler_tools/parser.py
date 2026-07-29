@@ -18,24 +18,31 @@ class Parser():
                "jle": 0b110,
                "jmp": 0b111}
     
-    __instructions = {  "mov" :{"0" : 0b101010,
-                                "1" : 0b111111,
-                                "-1": 0b111010,
-                                "D" : 0b001100,
-                                "O" : 0b110000},
-                        "not" :{"D" : 0b001101,
-                                "O" : 0b110001},
-                        "neg" :{"D" : 0b001111,
-                                "O" : 0b110011},
-                        "inc" :{"D" : 0b011111,
-                                "O" : 0b110111},
-                        "dec" :{"D" : 0b001110,
-                                "O" : 0b110010},
-                        "add" :{"O" : 0b000010},
-                        "subl":{"O" : 0b010011},
-                        "subr":{"O" : 0b000111},
-                        "and" :{"O" : 0b000000},
-                        "or"  :{"O" : 0b010101}
+    __instructions = {  "mov" :{"0" : 0b0101010,
+                                "1" : 0b0111111,
+                                "-1": 0b0111010,
+                                "D" : 0b0001100,
+                                "O" : 0b0110000},
+                        "not" :{"D" : 0b0001101,
+                                "O" : 0b0110001},
+                        "neg" :{"D" : 0b0001111,
+                                "O" : 0b0110011},
+                        "inc" :{"D" : 0b0011111,
+                                "O" : 0b0110111},
+                        "dec" :{"D" : 0b0001110,
+                                "O" : 0b0110010},
+                        "add" :{"O" : 0b0000010},
+                        "subl":{"O" : 0b0010011},
+                        "subr":{"O" : 0b0000111},
+                        "and" :{"O" : 0b0000000},
+                        "or"  :{"O" : 0b0010101},
+                        "sqr" :{"D" : 0b1000010,
+                                "O" : 0b1000011},
+                        "mult":{"O" : 0b1000000},
+                        "divl":{"O" : 0b1000100},
+                        "divr":{"O" : 0b1000101},
+                        "modl":{"O" : 0b1000110},
+                        "modr":{"O" : 0b1000111},
     }
 
     __operands = {"A" : 0b00,
@@ -46,7 +53,6 @@ class Parser():
     def parse_tokens(self, emulator, tokens, symbol_table):
         for i in range(emulator.memory_size):
             emulator.set_value(i,0)
-
 
         for i in range(len(tokens)):
             try:

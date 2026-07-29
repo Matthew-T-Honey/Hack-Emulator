@@ -9,8 +9,19 @@ A Commands:
 Load value into the A register
 
 C Commands:
-1xcc cccc aadd djjj  
-cccccc Controls the ALU functionality (as standard Hack)  
+1bcc cccc aadd djjj
+
+b=0 uses basic Hack ALU functionality for cccccc (as standard Hack)
+b=1 uses advanced computations for cccccc:
+- xxx00x - Mult - (D multiplied by operand)
+- xxx010 - Sqr D - (D squared)
+- xxx011 - Sqr O - (operand squared)
+- xxx100 - Divl - (D divided by operand)
+- xxx101 - Divr - (operand divided by D)
+- xxx110 - Modl - (D mod operand)
+- xxx111 - Modr - (operand mod D)
+First 3 bits available for future expansion of the ISA
+
 aa Specifies the operand:  
 -  00 - A  
 -  01 - M  
@@ -75,12 +86,18 @@ integer literal - Defines an integer literal value with no corresponding identif
 - dec, (A|D|M|S|P), [\<dest>], [\<jump>]
 - neg, (A|D|M|S|P), [\<dest>], [\<jump>]
 - not, (A|D|M|S|P), [\<dest>], [\<jump>]
+- sqr, (A|D|M|S|P), [\<dest>], [\<jump>]
 
 - add, (A|M|S|P), [\<dest>], [\<jump>]
-- subl, (A|M|S|P), [\<dest>], [\<jump>]  - D-A
-- subr, (A|M|S|P), [\<dest>], [\<jump>]  - A-D
+- subl, (A|M|S|P), [\<dest>], [\<jump>]  - D-O
+- subr, (A|M|S|P), [\<dest>], [\<jump>]  - O-D
 - and, (A|M|S|P), [\<dest>], [\<jump>]
 - or, (A|M|S|P), [\<dest>], [\<jump>]
+- mult, (A|M|S|P), [\<dest>], [\<jump>] 
+- divl, (A|M|S|P), [\<dest>], [\<jump>] - D/O
+- divr, (A|M|S|P), [\<dest>], [\<jump>] - O/D
+- modl, (A|M|S|P), [\<dest>], [\<jump>] - D%O
+- modr, (A|M|S|P), [\<dest>], [\<jump>] - O%D
 
 ### Stack shorthand:
 - push, (A|D|M|S|P|"1"|"0"|"-1"), [\<jump>] ::= mov, (A|D|M|S|P|"1"|"0"|"-1"), S [\<jump>]
