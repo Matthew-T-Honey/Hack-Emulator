@@ -1,5 +1,16 @@
 from enum import Enum
 
 class NodeType(Enum):
-    CODE = 0
-    FUNCTION = 1
+    CODE = 100
+    FUNCTION = 101
+    WHILE_LOOP = 102
+    IF_CONDITION = 103
+    VAR_DECLARATION = 104
+    RETURN_STATEMENT = 105
+    EXPRESSION_STATEMENT = 106
+    EXPRESSION = 107
+    PARAMETER_LIST = 108
+    VARIABLE = 109
+    TERM = 110
+    FUNCTION_CALL = 111
+

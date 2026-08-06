@@ -13,20 +13,17 @@ class Lexer():
                          "return","true","false",
                          "heap","screen","kbd"]
 
-    __keywords = ["true","false","heap","screen","kbd"]
+    __keywords = ["true","false","null","heap","screen","kbd"]
 
     __operators = ["==","-","~","!","||","&&","|","&",
                   "<",">","<=",">=","+","*","/","%"]
-
-    def __init__(self):
-        self.symbol_table = []
 
     def lex_string(self, file_str):
 
         file_lines = file_str.split("\n")
         tokens = []
         for i in range(len(file_lines)):
-            tokens += self.lex_line(file_lines[i], i)
+            tokens += self.lex_line(file_lines[i], i+1)
         return tokens
 
     def lex_line(self, line, line_number):
@@ -79,7 +76,6 @@ class Lexer():
         if self.__is_an_integer(string):
             return Token(string,TokenType.INTEGER_LITERAL,line_number)
         if self.__is_valid_identifier(string):
-            self.symbol_table.append(string)
             return Token(string,TokenType.IDENTIFIER,line_number)
         raise SyntaxError("Invalid symbol: "+string)
 

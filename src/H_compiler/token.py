@@ -14,7 +14,7 @@ class Token():
 
     @property
     def line(self):
-        return self.line_number
+        return self.__line_number
     
     def __str__(self):
         return str(self.text)

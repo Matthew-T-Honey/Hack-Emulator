@@ -1,6 +1,7 @@
 class ParseNode():
-    def __init__(self, type):
+    def __init__(self, type, line):
         self.__type = type
+        self.__line = line
         self.__nodes = []
 
     def add_node(self, node):
@@ -13,3 +14,10 @@ class ParseNode():
     @property
     def type(self):
         return self.__type
+
+    @property
+    def line(self):
+        return self.__line
+
+    def __str__(self):
+        return str(self.type)+"{\n"+"\n".join([str(node) for node in self.nodes])+"}"

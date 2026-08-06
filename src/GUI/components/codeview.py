@@ -1,4 +1,7 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
+import os
+from src.H_compiler.compiler import Compiler
+from src.GUI.components.error_box import ErrorBox
 
 class CodeView():
     def __init__(self, gui):
@@ -115,19 +118,27 @@ class CodeView():
             elif ret == QtWidgets.QMessageBox.StandardButton.Cancel:
                 return
 
-        filename = QtWidgets.QFileDialog.getOpenFileName(self.widget, "Load File","","(*.asm)")[0]
+        filename = QtWidgets.QFileDialog.getOpenFileName(self.widget, "Load File","","(*.asm *.hack)")[0]
         if filename:
             try:
                 file = open(filename, "r")
                 lines = file.readlines()
                 filelines = ("").join(lines)
                 file.close()
+                if os.path.splitext(filename)[1] == ".h":
+                    compiler = Compiler()
+                    try:
+                        filelines = compiler.compile(filelines)
+                    except SyntaxError as e:
+                        ErrorBox(str(e))
+                        return
+
                 self.widget.setPlainText(filelines)
                 self.codefile = filename
                 self.filename_label.setText(self.codefile.split("/")[-1])
                 self.saved = True
             except:
-                return
+                ErrorBox("Unable to load file")
 
     def save_file(self):
         if self.codefile != None:
