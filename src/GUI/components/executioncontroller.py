@@ -99,6 +99,7 @@ class ExecutionController():
         self.gui.ram_view.update_RAM(self.emulator.PC_value)
 
         self.gui.registers.update()
+        self.gui.ram_view.scroll_to_tracking()
 
     def toggle_run(self):
         if not self.running:
